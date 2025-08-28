@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BI Dashboard - Análise Individual</title>
+  <link rel="stylesheet" href="individual.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div class="topbar">
+    <div>BI Dashboard</div>
+    <div>RedeFinance</div>
+  </div>
+
+  <div class="container">
+    <div class="tabs">
+      <a href="index.html" class="tab">Análise Geral de Empresas</a>
+      <a href="individual.html" class="tab active">Análise Individual da Empresa</a>
+    </div>
+
+    <div class="empresa-header">
+      <h2>CARREFOUR COMERCIO E INDUSTRIA LTDA</h2>
+      <span>CNPJ: 45.543.915/0001-81</span>
+    </div>
+
+    <div class="cards">
+      <div class="card"><h3>Patrimônio da Empresa</h3><div class="value">R$45.678,90</div></div>
+      <div class="card"><h3>Média de Lucro Mensal</h3><div class="value">R$2.405,46</div></div>
+      <div class="card"><h3>Classificação de Perfil</h3><div class="value">Expansão</div></div>
+      <div class="card"><h3>Ramo de Atuação</h3><div class="value">Construção</div></div>
+    </div>
+
+    <div class="chart-box">
+      <h3>Acompanhamento Econômico da Empresa</h3>
+      <canvas id="lineChart" height="75"></canvas>
+    </div>
+
+    <div class="tables">
+      <div>
+        <h3>Principais Relacionamentos</h3>
+        <table>
+          <thead>
+            <tr><th>CNPJ/CPF</th><th>Nome</th><th>Entrada</th><th>Saída</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>00.000.000/0000-00</td><td>Santander Brasil</td><td>+R$10.234,85</td><td>-R$3.647,12</td></tr>
+            <tr><td>00.000.000/0000-00</td><td>Santander Brasil</td><td>+R$10.234,85</td><td>-R$3.647,12</td></tr>
+            <tr><td>00.000.000/0000-00</td><td>Santander Brasil</td><td>+R$10.234,85</td><td>-R$3.647,12</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div>
+        <h3>Empresas semelhantes</h3>
+        <table>
+          <thead>
+            <tr><th>CNPJ</th><th>Razão Social</th><th>Classificação</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>00.000.000/0000-00</td><td>Santander Brasil</td><td>Expansão</td></tr>
+            <tr><td>00.000.000/0000-00</td><td>Santander Brasil</td><td>Declínio</td></tr>
+            <tr><td>00.000.000/0000-00</td><td>Santander Brasil</td><td>Início</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const ctx = document.getElementById('lineChart').getContext('2d');
+
+    const lineChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago'],
+        datasets: [{
+          label: 'Lucro Mensal (R$)',
+          data: [2405, 3200, 2900, 3500, 4100, 3700, 4500, 4800],
+          borderColor: '#dc2626',
+          backgroundColor: 'rgba(220, 38, 38, 0.1)',
+          fill: true,
+          tension: 0.3,
+          pointRadius: 4,
+          pointBackgroundColor: '#dc2626',
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            display: true,
+            position: 'top',
+            labels: {
+              color: '#991b1b',
+              font: { size: 13 }
+            }
+          },
+          tooltip: {
+            callbacks: {
+              label: function(context) {
+                return 'R$ ' + context.raw.toLocaleString('pt-BR', {minimumFractionDigits: 2});
+              }
+            }
+          }
+        },
+        scales: {
+          x: {
+            ticks: { color: '#555' },
+            grid: { color: '#f5f5f5' }
+          },
+          y: {
+            ticks: {
+              color: '#555',
+              callback: function(value) { return 'R$ ' + value.toLocaleString('pt-BR'); }
+            },
+            grid: { color: '#f5f5f5' }
+          }
+        }
+      }
+    });
+  </script>
+</body>
+</html>
