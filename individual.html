@@ -6,6 +6,9 @@
   <title>BI Dashboard - Análise Individual</title>
   <link rel="stylesheet" href="./styles/individual.css" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> 
+  <script type="module" src="./scripts/individual.js"></script>
 </head>
 <body>
   <div class="topbar">
@@ -66,58 +69,8 @@
     </div>
   </div>
 
-  <script>
-    const ctx = document.getElementById('lineChart').getContext('2d');
-
-    const lineChart = new Chart(ctx, {
-      type: 'line',
-      data: {
-        labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago'],
-        datasets: [{
-          label: 'Lucro Mensal (R$)',
-          data: [2405, 3200, 2900, 3500, 4100, 3700, 4500, 4800],
-          borderColor: '#dc2626',
-          backgroundColor: 'rgba(220, 38, 38, 0.1)',
-          fill: true,
-          tension: 0.3,
-          pointRadius: 4,
-          pointBackgroundColor: '#dc2626',
-        }]
-      },
-      options: {
-        responsive: true,
-        plugins: {
-          legend: {
-            display: true,
-            position: 'top',
-            labels: {
-              color: '#991b1b',
-              font: { size: 13 }
-            }
-          },
-          tooltip: {
-            callbacks: {
-              label: function(context) {
-                return 'R$ ' + context.raw.toLocaleString('pt-BR', {minimumFractionDigits: 2});
-              }
-            }
-          }
-        },
-        scales: {
-          x: {
-            ticks: { color: '#555' },
-            grid: { color: '#f5f5f5' }
-          },
-          y: {
-            ticks: {
-              color: '#555',
-              callback: function(value) { return 'R$ ' + value.toLocaleString('pt-BR'); }
-            },
-            grid: { color: '#f5f5f5' }
-          }
-        }
-      }
-    });
-  </script>
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script type="module" src="./scripts/individual.js"></script>
 </body>
 </html>

@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>BI Dashboard - Análise Geral</title>
   <link rel="stylesheet" href="./styles/index.css" />
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script type="module" src="./scripts/index.js"></script>
 </head>
 <body>
   <div class="topbar">
@@ -28,25 +31,14 @@
       <!-- Gráfico de Rosca -->
       <div class="box">
         <h3>Quantidade x Classificação de Perfil</h3>
-        <div class="donut-chart"></div>
-        <div class="legend">
-          <span><span class="legend-box inicio"></span> Início (10%)</span>
-          <span><span class="legend-box expansao"></span> Expansão (14%)</span>
-          <span><span class="legend-box madura"></span> Madura (30%)</span>
-          <span><span class="legend-box declinio"></span> Declínio (46%)</span>
-        </div>
+        <canvas id="donutChart" height="180"></canvas>
+        <div class="legend" id="legendPerfil"></div>
       </div>
 
       <!-- Gráfico de Barras -->
       <div class="box">
-        <h3>Perspectiva de Gastos x Região</h3>
-        <div class="bar-chart">
-          <div class="bar-item"><div class="bar" style="height:250px"></div><span>Sudeste</span></div>
-          <div class="bar-item"><div class="bar" style="height:160px"></div><span>Sul</span></div>
-          <div class="bar-item"><div class="bar" style="height:70px"></div><span>Nordeste</span></div>
-          <div class="bar-item"><div class="bar" style="height:200px"></div><span>Centro-Oeste</span></div>
-          <div class="bar-item"><div class="bar" style="height:120px"></div><span>Norte</span></div>
-        </div>
+        <h3>Valor Transacionado por Tipo</h3>
+        <canvas id="barChart" height="220"></canvas>
       </div>
     </div>
 
