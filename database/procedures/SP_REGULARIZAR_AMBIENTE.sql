@@ -152,6 +152,11 @@ BEGIN
         PRINT 'TABELA "FATURAMENTO_TEMP" TEMPORARIA DROPADA COM SUCESSO.';
     END
 
+    SET @SQL = '
+		alter table CLIENTE ADD CLASSIFICACAO VARCHAR(50)
+    ';
+    EXEC(@SQL);
+
     PRINT 'Ambiente regularizado com sucesso.';
 END
 GO
