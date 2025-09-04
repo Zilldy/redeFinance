@@ -1,4 +1,5 @@
 import pyodbc
+import pandas as pd
 
 # Configurações de conexão
 server = r'(LocalDB)\MSSQLLocalDB'
@@ -29,6 +30,33 @@ def consultar_tabela(nome_tabela):
         finally:
             cursor.close()
             conn.close()
+
+
+# Objeto para compartilhar DataFrame entre arquivos/classes
+class DatabaseTableData:
+    def __init__(self):
+        self.df = None
+
+    def preencher_dataframe(self, nome_tabela, query=None) -> pd.DataFrame:
+        """
+        Preenche o DataFrame com os dados da tabela informada ou de um SELECT customizado.
+        Se query for None, faz SELECT * FROM nome_tabela.
+        """
+        conn = get_connection()
+        try:
+            if query is None:
+                query = f"SELECT * FROM {nome_tabela}"
+            self.df = pd.read_sql(query, conn)
+        finally:
+            conn.close()
+
+        return self.get_dataframe()
+
+
+    def get_dataframe(self):
+        """Retorna o DataFrame atual."""
+        return self.df
+
 
 if __name__ == "__main__":
     try:

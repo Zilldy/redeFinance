@@ -11,8 +11,14 @@ if __name__ == "__main__":
         print("Conexão bem-sucedida com o banco de dados!")
 
         resultados = dbconfig.consultar_tabela("CLIENTE")
-        for registro in resultados:
-            print(registro)
+
+
+        df = dbconfig.DatabaseTableData().preencher_dataframe("SALDO_CLIENTE")
+        print(df["CLIENTE"])
+        print()
+        print(df["DT_ABRT"])
+        print()
+        print(df["SALDO_TOTAL_MENSAL"])
 
         conn.close()
     except Exception as e:
