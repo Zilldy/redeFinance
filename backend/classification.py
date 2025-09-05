@@ -26,7 +26,8 @@ class CNPJClassifier:
 
         # Buscar saldo do último mês no banco de dados
         saldo_ultimo_mes = self._get_last_month_balance(cliente)
-        media_min, media_max = self._calculate_balance_range(saldo_total)
+        count_meses = self._qtd_meses(cliente)
+        media_min, media_max = self._calculate_balance_range(saldo_total, count_meses)
 
         # Regra: Expansão
         if saldo_ultimo_mes > media_max:
@@ -68,13 +69,28 @@ class CNPJClassifier:
             cursor.close()
             conn.close()
 
-    def _calculate_balance_range(self, saldo_total) -> tuple:
+    def _calculate_balance_range(self, saldo_total, count_meses) -> tuple:
         """
         Calcula a média mínima e máxima com margem de 15%.
         """
-        media_saldo = saldo_total
+        media_saldo = saldo_total / count_meses
         margem = media_saldo * 0.15
         return media_saldo - margem, media_saldo + margem
+
+    def _qtd_meses(self, cliente) -> float:
+        query = f"""
+        SELECT COUNT(MES_REFERENCIA) FROM FATURAMENTO_CLIENTE
+        WHERE CLIENTE = '{cliente}'
+        """
+        conn = get_connection()
+        try:
+            cursor = conn.cursor()
+            cursor.execute(query)
+            result = cursor.fetchone()
+            return result[0] if result else 1.0
+        finally:
+            cursor.close()
+            conn.close()
 
     def _update_database(self, df) -> pd.DataFrame:
         """

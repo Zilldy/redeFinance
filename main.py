@@ -1,4 +1,5 @@
 from database import dbconfig
+from backend import classification
 import pyodbc
 
 if __name__ == "__main__":
@@ -19,6 +20,9 @@ if __name__ == "__main__":
         print(df["DT_ABRT"])
         print()
         print(df["SALDO_TOTAL_MENSAL"])
+
+        classifier = classification.CNPJClassifier(df)
+        classifier.classify()
 
         conn.close()
     except Exception as e:
