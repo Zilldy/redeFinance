@@ -15,14 +15,16 @@ if __name__ == "__main__":
 
 
         df = dbconfig.DatabaseTableData().preencher_dataframe("SALDO_CLIENTE")
-        print(df["CLIENTE"])
-        print()
-        print(df["DT_ABRT"])
-        print()
-        print(df["SALDO_TOTAL_MENSAL"])
+        # print(df["CLIENTE"])
+        # print()
+        # print(df["DT_ABRT"])
+        # print()
+        # print(df["SALDO_TOTAL_CLIENTE"])
 
         classifier = classification.CNPJClassifier(df)
         classifier.classify()
+
+       
 
         conn.close()
     except Exception as e:

@@ -1,6 +1,7 @@
 import pandas as pd
 from database.dbconfig import get_connection
 
+
 class CNPJClassifier:
     def __init__(self, df: pd.DataFrame):
         self.df = df
@@ -16,7 +17,7 @@ class CNPJClassifier:
         """
         Classifica uma única linha do DataFrame.
         """
-        saldo_total = row['SALDO_TOTAL_CLIENTE'].mean()
+        saldo_total = row['SALDO_TOTAL_CLIENTE']
         dt_criacao = pd.to_datetime(row['DT_ABRT'])
         cliente = row['CLIENTE']
 
@@ -55,7 +56,7 @@ class CNPJClassifier:
         Consulta o saldo do último mês para o cliente no banco de dados.
         """
         query = f"""
-        SELECT TOP 1 MES_REFERENCIA FROM VW_FATURAMENTO_CLIENTE
+        SELECT TOP 1 MES_REFERENCIA FROM FATURAMENTO_CLIENTE
         WHERE CLIENTE = '{cliente}'
         ORDER BY MES_REFERENCIA DESC
         """
@@ -64,7 +65,12 @@ class CNPJClassifier:
             cursor = conn.cursor()
             cursor.execute(query)
             result = cursor.fetchone()
-            return result[0] if result else 0.0
+            if result and result[0] is not None:
+                try:
+                    return float(result[0])
+                except ValueError:
+                    return 0.0
+            return 0.0
         finally:
             cursor.close()
             conn.close()
@@ -119,6 +125,8 @@ if __name__ == "__main__":
         "DT_ABRT": ["2020-01-01", "2010-01-01"]
     }
     df = pd.DataFrame(data)
+    print("aqui esta o df:")
+    print(df)
 
     classifier = CNPJClassifier(df)
     df_classificado = classifier.classify()
