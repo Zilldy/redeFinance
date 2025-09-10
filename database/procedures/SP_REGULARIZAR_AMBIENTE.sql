@@ -12,9 +12,9 @@ BEGIN
     SET NOCOUNT ON;
 
     DECLARE 
-        @NOME_DB VARCHAR(50) = 'AA', --Definir o nome da base 
-        @FIND_BASE1 VARCHAR(250) = 'C:\Users\osval\Downloads\base1 (2).csv', -- Direcionar para a base 1
-        @FIND_BASE2 VARCHAR(250) = 'C:\Users\osval\Downloads\base2 (1).csv', -- Direcionar para a base 2
+        @NOME_DB VARCHAR(50) = 'CHALLENGE', --Definir o nome da base 
+        @FIND_BASE1 VARCHAR(250) = '/var/opt/mssql/data/csv/base1 (2).csv', -- Direcionar para a base 1
+        @FIND_BASE2 VARCHAR(250) = '/var/opt/mssql/data/csv/base2 (1).csv', -- Direcionar para a base 2
         @SQL NVARCHAR(MAX);
 
     -- Criar a base de dados se não existir

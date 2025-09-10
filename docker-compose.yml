@@ -12,3 +12,4 @@ services:
     volumes:
       - ./mssql_data:/var/opt/mssql/data
       - ./database/procedures:/var/opt/mssql/data/procedures
+      - ./database/csv:/var/opt/mssql/data/csv
