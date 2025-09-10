@@ -3,7 +3,7 @@ import pandas as pd
 
 # Configurações de conexão
 server = r'(LocalDB)\MSSQLLocalDB'
-database = 'CHALLANGE'  # Altere para o nome do seu banco de dados, se necessário
+database = 'CHALLENGE'  # Altere para o nome do seu banco de dados, se necessário
 username = 'dev'
 password = '1234'
 
