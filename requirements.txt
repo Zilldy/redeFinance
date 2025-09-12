@@ -2,3 +2,4 @@ pandas
 pyodbc
 fastapi
 pydantic
+uvicorn
