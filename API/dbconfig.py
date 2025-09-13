@@ -58,6 +58,25 @@ class DatabaseTableData:
         return self.df
 
 
+class DatabaseConnection:
+    def __init__(self):
+        self.connection = None
+
+    def __enter__(self):
+        if self.connection is None:
+            self.connection = get_connection()
+        return self.connection
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        if self.connection:
+            self.connection.close()
+            self.connection = None
+    
+    def get_connection(self):
+        if self.connection is None:
+            self.connection = get_connection()
+        return self.connection
+
 if __name__ == "__main__":
     try:
         conn = get_connection()

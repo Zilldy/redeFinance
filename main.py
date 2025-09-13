@@ -1,4 +1,4 @@
-from database import dbconfig
+from API import dbconfig
 from backend import classification
 import pyodbc
 

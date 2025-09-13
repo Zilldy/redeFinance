@@ -1,5 +1,5 @@
 import pandas as pd
-from database.dbconfig import get_connection
+from API.dbconfig import get_connection
 
 
 class CNPJClassifier:

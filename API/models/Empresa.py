@@ -21,8 +21,8 @@ class Empresa(BaseModel):
     nome: str
     cnpj: str
     faturamento: float
-    medLucro: float
-    classificacao: str
+    medLucro: float | None
+    classificacao: str | None
     cnae: str
     saldos: List[Saldo]
     relacionamentos: List[Relacionamento]
