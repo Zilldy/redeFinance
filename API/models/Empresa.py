@@ -1,9 +1,8 @@
 from pydantic import BaseModel
 from typing import List
-from datetime import datetime
 
 class Saldo(BaseModel):
-    data: datetime
+    data: str
     saldo: float
 
 class Relacionamento(BaseModel):

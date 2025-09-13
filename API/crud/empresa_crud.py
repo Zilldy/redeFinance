@@ -67,11 +67,29 @@ def get_empresa_infos(id: str) -> object:
     }
     return empresa_infos
 
-# TO DO: Query para os 3 métodos abaixo
-
 def get_saldos(id: str) -> List[Saldo]:
     # Implementação para buscar saldos no banco de dados
-    return [Saldo(data="2023-01-01", saldo=1000.0), Saldo(data="2023-01-01", saldo=1000.0)]
+    query = f"""
+        SELECT 
+            MES_REFERENCIA,
+            SALDO_MES
+        FROM FATURAMENTO_CLIENTE 
+        WHERE CLIENTE = '{id}'
+        ORDER BY CLIENTE, MES_REFERENCIA;
+    """
+    resultados = execute_query(query)
+    saldos = []
+    for row in resultados:
+        date_str = row.get("MES_REFERENCIA")
+        saldos.append(
+            Saldo(
+                data=row.get("MES_REFERENCIA"), 
+                saldo=row.get("SALDO_MES", 0.0).replace(',', '')
+                )
+            )
+    return saldos
+
+# TO DO: Query para os 2 métodos abaixo
 
 def get_relacionamentos(id: str) -> List[Relacionamento]:
     # Implementação para buscar relacionamentos no banco de dados
