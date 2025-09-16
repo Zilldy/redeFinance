@@ -5,7 +5,13 @@ class Saldo(BaseModel):
     data: str
     saldo: float
 
-class Relacionamento(BaseModel):
+class RelacionamentoPagadores(BaseModel):
+    cnpj: str
+    nome: str
+    totalEnt: float
+    totalSai: float
+
+class RelacionamentoRecebedores(BaseModel):
     cnpj: str
     nome: str
     totalEnt: float
@@ -24,5 +30,6 @@ class Empresa(BaseModel):
     classificacao: str | None
     cnae: str
     saldos: List[Saldo]
-    relacionamentos: List[Relacionamento]
+    relacionamentosPagadores: List[RelacionamentoPagadores]
+    relacionamentosRecebedores: List[RelacionamentoRecebedores]
     semelhantes: List[Semelhante]
