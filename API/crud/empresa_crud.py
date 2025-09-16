@@ -12,26 +12,39 @@ def execute_query(query: str) -> List[object]:
 
 def get_empresa_by_id(id: str) -> Empresa:
     query = f"""
-        SELECT
-            c.ID as NAME,
-            c.ID as CNPJ,
-            c.VL_FATU as FATURAMENTO,
-            c.DS_CNAE AS DS_CNAE,
-            c.CLASSIFICACAO
-        FROM CLIENTE c
-        WHERE ID = '{id}'
+        SELECT DISTINCT
+            C.ID as NAME,
+            C.ID as CNPJ,
+            SUM(S.SALDO_TOTAL_CLIENTE) AS SALDO,
+                CAST(
+                (
+                SELECT 
+                    SUM(
+                    TRY_CAST(REPLACE(REPLACE(LTRIM(RTRIM(FC.SALDO_MES)), '+', ''), ',', '') AS DECIMAL(18,2))
+                    ) / COUNT(*)
+                FROM FATURAMENTO_CLIENTE FC
+                WHERE FC.CLIENTE = C.ID
+                ) AS DECIMAL(18,2)
+            ) AS MEDIA, -- CAMPO 2
+            C.CLASSIFICACAO, --CAMPO 3
+            C.DS_CNAE AS RAMO -- CAMPO 4
+        FROM CLIENTE C
+        JOIN SALDO_CLIENTE S ON C.ID = CLIENTE
+        WHERE C.ID = {id}
+        GROUP BY C.ID, C.CLASSIFICACAO, C.DS_CNAE
     """
     resultados = execute_query(query)
-    empresa_infos = get_empresa_infos(id)
+    cnae = row.get("CLASSIFICACAO", "")
+    empresa_infos = get_empresa_infos(id, cnae)
     if resultados:
         row = resultados[0]
         empresa = Empresa(
             nome=row.get("NAME"),
             cnpj=row.get("CNPJ"),
-            faturamento=row.get("FATURAMENTO", 0.0),
-            medLucro=get_media_lucro(id),
-            cnae=row.get("DS_CNAE", ""),
-            classificacao=row.get("CLASSIFICACAO", ""),
+            faturamento=row.get("SALDO", 0.0),
+            medLucro=row.get("MEDIA", 0.0),
+            cnae=row.get("RAMO", ""),
+            classificacao=cnae,
             saldos=empresa_infos["saldos"], 
             relacionamentos=empresa_infos["relacionamentos"], 
             semelhantes=empresa_infos["semelhantes"] 
@@ -39,31 +52,11 @@ def get_empresa_by_id(id: str) -> Empresa:
         return empresa
     return None
 
-def get_media_lucro(id: str) -> float | None:
-    saldo_total = get_saldo_total(id)
-    count = get_qtd_meses(id)
-    if saldo_total and count and count > 0:
-        return saldo_total / count
-    return None
-
-def get_saldo_total(id: str) -> float | None:
-    query = f"SELECT SALDO_TOTAL_CLIENTE FROM SALDO_CLIENTE WHERE CLIENTE = '{id}'"
-    saldo_total = execute_query(query)
-    return saldo_total[0].get("SALDO_TOTAL_CLIENTE", 0.0)
-
-def get_qtd_meses(id: str) -> int | None:
-    query = f"""
-        SELECT COUNT(MES_REFERENCIA) as QTD_MESES FROM FATURAMENTO_CLIENTE
-        WHERE CLIENTE = '{id}'
-        """
-    count = execute_query(query)
-    return count[0].get("QTD_MESES", 0)
-
-def get_empresa_infos(id: str) -> object:
+def get_empresa_infos(id: str, cnae: str) -> object:
     empresa_infos = {
         "saldos": get_saldos(id),
         "relacionamentos": get_relacionamentos(id),
-        "semelhantes": get_semelhantes(id)
+        "semelhantes": get_semelhantes(cnae)
     }
     return empresa_infos
 
@@ -80,7 +73,6 @@ def get_saldos(id: str) -> List[Saldo]:
     resultados = execute_query(query)
     saldos = []
     for row in resultados:
-        date_str = row.get("MES_REFERENCIA")
         saldos.append(
             Saldo(
                 data=row.get("MES_REFERENCIA"), 
@@ -91,10 +83,111 @@ def get_saldos(id: str) -> List[Saldo]:
 
 # TO DO: Query para os 2 métodos abaixo
 
-def get_relacionamentos(id: str) -> List[Relacionamento]:
+def get_relacionamentos(id: str) -> Relacionamentos:
     # Implementação para buscar relacionamentos no banco de dados
-    return [Relacionamento(cnpj="12.345.678/0001-90", nome="Empresa X", totalEnt=5000.0, totalSai=3000.0)]
+    pagadores = get_pagadores(id)
+    recebedores = get_recebedores(id)
+    return Relacionamentos(pagadores=pagadores, recebedores=recebedores)
 
-def get_semelhantes(id: str) -> List[Semelhante]:
-    # Implementação para buscar empresas semelhantes no banco de dados
-    return [Semelhante(cnpj="98.765.432/0001-09", nome="Empresa Y", classificacao="Madura")]
+def get_pagadores(id: str) -> List[RelacionamentoPagadores]:
+    query = f"""
+    SELECT TOP 5
+        R.PARCEIRO,
+        SUM(R.ENTRADA) AS TOTAL_ENTRADA,
+        SUM(R.SAIDA) AS TOTAL_SAIDA,
+        COUNT(*) AS INTERACOES
+    FROM (
+    SELECT 
+        F.ID_RCBE AS PARCEIRO,
+        0 AS ENTRADA,
+        TRY_CAST(REPLACE(CAST(F.VL AS VARCHAR), ',', '') AS DECIMAL(18,2)) AS SAIDA
+    FROM FATURAMENTO F
+    WHERE F.ID_PGTO = {id}
+
+    UNION ALL
+
+    SELECT 
+        F.ID_PGTO AS PARCEIRO,
+        TRY_CAST(REPLACE(CAST(F.VL AS VARCHAR), ',', '') AS DECIMAL(18,2)) AS ENTRADA,
+        0 AS SAIDA
+    FROM FATURAMENTO F
+    WHERE F.ID_RCBE = {id}
+    ) R
+    GROUP BY R.PARCEIRO
+    ORDER BY INTERACOES DESC, TOTAL_SAIDA DESC
+    """
+    resultados = execute_query(query)
+    pagadores = []
+    for row in resultados:
+        pagadores.append(
+            RelacionamentoPagadores(
+                    cnpj=row.get("PARCEIRO"),
+                    nome=row.get("PARCEIRO"),
+                    totalEnt=row.get("TOTAL_ENTRADA", 0.0),
+                    totalSai=row.get("TOTAL_SAIDA", 0.0),
+                    interacoes=row.get("INTERACOES", 0)
+                )
+            )
+    return pagadores
+
+def get_recebedores(id: str) -> List[RelacionamentoRecebedores]:
+    query = f"""
+    SELECT TOP 5
+        R.PARCEIRO,
+        SUM(R.ENTRADA) AS TOTAL_ENTRADA,
+        SUM(R.SAIDA) AS TOTAL_SAIDA,
+        COUNT(*) AS INTERACOES
+    FROM (
+    SELECT 
+        F.ID_RCBE AS PARCEIRO,
+        0 AS ENTRADA,
+        TRY_CAST(REPLACE(CAST(F.VL AS VARCHAR), ',', '') AS DECIMAL(18,2)) AS SAIDA
+    FROM FATURAMENTO F
+    WHERE F.ID_PGTO = @ID
+
+    UNION ALL
+
+    SELECT 
+        F.ID_PGTO AS PARCEIRO,
+        TRY_CAST(REPLACE(CAST(F.VL AS VARCHAR), ',', '') AS DECIMAL(18,2)) AS ENTRADA,
+        0 AS SAIDA
+    FROM FATURAMENTO F
+    WHERE F.ID_RCBE = @ID
+    ) R
+    GROUP BY R.PARCEIRO
+    ORDER BY INTERACOES DESC, TOTAL_ENTRADA DESC
+    """
+    resultados = execute_query(query)
+    recebedores = []
+    for row in resultados:
+        recebedores.append(
+            RelacionamentoRecebedores(
+                    cnpj=row.get("PARCEIRO"),
+                    nome=row.get("PARCEIRO"),
+                    totalEnt=row.get("TOTAL_ENTRADA", 0.0),
+                    totalSai=row.get("TOTAL_SAIDA", 0.0),
+                    interacoes=row.get("INTERACOES", 0)
+                )
+            )
+    return recebedores
+
+def get_semelhantes(cnae: str) -> List[Semelhante]:
+    query = f"""
+        SELECT DISTINCT 
+            ID, 
+            DS_CNAE, 
+            CLASSIFICACAO  
+        FROM CLIENTE where DS_CNAE = {cnae}
+    """
+    resultados = execute_query(query)
+    semelhantes = []
+    for row in resultados:
+        semelhantes.append(
+            Semelhante(
+                cnpj=row.get("ID"),
+                nome=row.get("ID"),
+                cnae=cnae,
+                classificacao=row.get("CLASSIFICACAO")
+                )
+            )
+    return semelhantes

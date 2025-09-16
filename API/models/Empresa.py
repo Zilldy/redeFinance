@@ -10,26 +10,32 @@ class RelacionamentoPagadores(BaseModel):
     nome: str
     totalEnt: float
     totalSai: float
+    interacoes: int
 
 class RelacionamentoRecebedores(BaseModel):
     cnpj: str
     nome: str
     totalEnt: float
     totalSai: float
+    interacoes: int
+
+class Relacionamentos(BaseModel):
+    pagadores: List[RelacionamentoPagadores]
+    recebedores: List[RelacionamentoRecebedores]
 
 class Semelhante(BaseModel):
     cnpj: str
     nome: str
+    cnae: str
     classificacao: str
 
 class Empresa(BaseModel):
     nome: str
     cnpj: str
-    faturamento: float
+    saldo_total: float
     medLucro: float | None
     classificacao: str | None
     cnae: str
     saldos: List[Saldo]
-    relacionamentosPagadores: List[RelacionamentoPagadores]
-    relacionamentosRecebedores: List[RelacionamentoRecebedores]
+    relacionamentos: Relacionamentos
     semelhantes: List[Semelhante]
