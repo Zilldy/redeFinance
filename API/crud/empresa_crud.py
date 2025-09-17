@@ -49,7 +49,6 @@ def get_empresa_by_id(id: str) -> Empresa:
             relacionamentos=empresa_infos["relacionamentos"], 
             semelhantes=empresa_infos["semelhantes"] 
         )
-        print('FIM get_empresa_by_id')
         return empresa
     return None
 
