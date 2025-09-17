@@ -13,7 +13,7 @@ def execute_query(query: str) -> List[object]:
 def get_empresa_by_id(id: str) -> Empresa:
     query = f"""
         SELECT DISTINCT
-            C.ID as NAME,
+            C.ID as [NAME],
             C.ID as CNPJ,
             SUM(S.SALDO_TOTAL_CLIENTE) AS SALDO,
                 CAST(
@@ -41,7 +41,7 @@ def get_empresa_by_id(id: str) -> Empresa:
         empresa = Empresa(
             nome=row.get("NAME"),
             cnpj=row.get("CNPJ"),
-            faturamento=row.get("SALDO", 0.0),
+            saldo_total=row.get("SALDO", 0.0),
             medLucro=row.get("MEDIA", 0.0),
             cnae=cnae,
             classificacao=row.get("CLASSIFICACAO", ""),
@@ -49,6 +49,7 @@ def get_empresa_by_id(id: str) -> Empresa:
             relacionamentos=empresa_infos["relacionamentos"], 
             semelhantes=empresa_infos["semelhantes"] 
         )
+        print('FIM get_empresa_by_id')
         return empresa
     return None
 
@@ -173,7 +174,7 @@ def get_recebedores(id: str) -> List[RelacionamentoRecebedores]:
 
 def get_semelhantes(cnae: str) -> List[Semelhante]:
     query = f"""
-        SELECT DISTINCT 
+        SELECT DISTINCT TOP 5
             ID, 
             DS_CNAE, 
             CLASSIFICACAO  
@@ -187,7 +188,7 @@ def get_semelhantes(cnae: str) -> List[Semelhante]:
                 cnpj=row.get("ID"),
                 nome=row.get("ID"),
                 cnae=cnae,
-                classificacao=row.get("CLASSIFICACAO")
+                classificacao=row.get("CLASSIFICACAO", "")
                 )
             )
     return semelhantes

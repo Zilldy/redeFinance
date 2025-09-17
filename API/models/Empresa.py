@@ -27,7 +27,7 @@ class Semelhante(BaseModel):
     cnpj: str
     nome: str
     cnae: str
-    classificacao: str
+    classificacao: str | None
 
 class Empresa(BaseModel):
     nome: str
