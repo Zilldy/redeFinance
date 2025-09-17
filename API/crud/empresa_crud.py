@@ -30,21 +30,21 @@ def get_empresa_by_id(id: str) -> Empresa:
             C.DS_CNAE AS RAMO -- CAMPO 4
         FROM CLIENTE C
         JOIN SALDO_CLIENTE S ON C.ID = CLIENTE
-        WHERE C.ID = {id}
+        WHERE C.ID = '{id}'
         GROUP BY C.ID, C.CLASSIFICACAO, C.DS_CNAE
     """
     resultados = execute_query(query)
-    cnae = row.get("CLASSIFICACAO", "")
-    empresa_infos = get_empresa_infos(id, cnae)
     if resultados:
         row = resultados[0]
+        cnae = row.get("RAMO", "")
+        empresa_infos = get_empresa_infos(id, cnae)
         empresa = Empresa(
             nome=row.get("NAME"),
             cnpj=row.get("CNPJ"),
             faturamento=row.get("SALDO", 0.0),
             medLucro=row.get("MEDIA", 0.0),
-            cnae=row.get("RAMO", ""),
-            classificacao=cnae,
+            cnae=cnae,
+            classificacao=row.get("CLASSIFICACAO", ""),
             saldos=empresa_infos["saldos"], 
             relacionamentos=empresa_infos["relacionamentos"], 
             semelhantes=empresa_infos["semelhantes"] 
@@ -102,7 +102,7 @@ def get_pagadores(id: str) -> List[RelacionamentoPagadores]:
         0 AS ENTRADA,
         TRY_CAST(REPLACE(CAST(F.VL AS VARCHAR), ',', '') AS DECIMAL(18,2)) AS SAIDA
     FROM FATURAMENTO F
-    WHERE F.ID_PGTO = {id}
+    WHERE F.ID_PGTO = '{id}'
 
     UNION ALL
 
@@ -111,7 +111,7 @@ def get_pagadores(id: str) -> List[RelacionamentoPagadores]:
         TRY_CAST(REPLACE(CAST(F.VL AS VARCHAR), ',', '') AS DECIMAL(18,2)) AS ENTRADA,
         0 AS SAIDA
     FROM FATURAMENTO F
-    WHERE F.ID_RCBE = {id}
+    WHERE F.ID_RCBE = '{id}'
     ) R
     GROUP BY R.PARCEIRO
     ORDER BY INTERACOES DESC, TOTAL_SAIDA DESC
@@ -143,7 +143,7 @@ def get_recebedores(id: str) -> List[RelacionamentoRecebedores]:
         0 AS ENTRADA,
         TRY_CAST(REPLACE(CAST(F.VL AS VARCHAR), ',', '') AS DECIMAL(18,2)) AS SAIDA
     FROM FATURAMENTO F
-    WHERE F.ID_PGTO = @ID
+    WHERE F.ID_PGTO = '{id}'
 
     UNION ALL
 
@@ -152,7 +152,7 @@ def get_recebedores(id: str) -> List[RelacionamentoRecebedores]:
         TRY_CAST(REPLACE(CAST(F.VL AS VARCHAR), ',', '') AS DECIMAL(18,2)) AS ENTRADA,
         0 AS SAIDA
     FROM FATURAMENTO F
-    WHERE F.ID_RCBE = @ID
+    WHERE F.ID_RCBE = '{id}'
     ) R
     GROUP BY R.PARCEIRO
     ORDER BY INTERACOES DESC, TOTAL_ENTRADA DESC
@@ -177,7 +177,7 @@ def get_semelhantes(cnae: str) -> List[Semelhante]:
             ID, 
             DS_CNAE, 
             CLASSIFICACAO  
-        FROM CLIENTE where DS_CNAE = {cnae}
+        FROM CLIENTE where DS_CNAE = '{cnae}'
     """
     resultados = execute_query(query)
     semelhantes = []
