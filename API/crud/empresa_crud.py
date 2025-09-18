@@ -1,14 +1,6 @@
 from typing import List
-from dbconfig import DatabaseConnection
+from dbconfig import execute_query
 from models.Empresa import *
-
-def execute_query(query: str) -> List[object]:
-    with DatabaseConnection() as conn:
-        cursor = conn.cursor()
-        cursor.execute(query)
-        results = cursor.fetchall()
-        colunas = [desc[0] for desc in cursor.description]
-        return [dict(zip(colunas, row)) for row in results]
 
 def get_empresa_by_id(id: str) -> Empresa:
     query = f"""

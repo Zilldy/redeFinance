@@ -1,3 +1,4 @@
+from typing import List
 import pyodbc
 import pandas as pd
 
@@ -31,6 +32,13 @@ def consultar_tabela(nome_tabela):
             cursor.close()
             conn.close()
 
+def execute_query(query: str) -> List[object]:
+    with DatabaseConnection() as conn:
+        cursor = conn.cursor()
+        cursor.execute(query)
+        results = cursor.fetchall()
+        colunas = [desc[0] for desc in cursor.description]
+        return [dict(zip(colunas, row)) for row in results]
 
 # Objeto para compartilhar DataFrame entre arquivos/classes
 class DatabaseTableData:
