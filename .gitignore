@@ -1,1 +1,4 @@
-REAME.md
+mssql_data/*
+.venv/
+__pycache__
+README.md

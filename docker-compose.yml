@@ -1,0 +1,28 @@
+version: '3.8'
+services:
+  db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: redefinance
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=M@sterk3y
+      - MSSQL_PID=Express
+    ports:
+      - "1433:1433"
+    volumes:
+      - ./mssql_data:/var/opt/mssql/data
+      - ./database/procedures:/var/opt/mssql/data/procedures
+      - ./database/csv:/var/opt/mssql/data/csv
+
+  api:
+    build:
+      context: ./API
+      dockerfile: Dockerfile
+    container_name: redefinance_api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Server=db;Database=RedefinanceDB;User Id=sa;Password=M@sterk3y;
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
