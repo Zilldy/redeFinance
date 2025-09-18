@@ -21,8 +21,8 @@ if __name__ == "__main__":
         # print()
         # print(df["SALDO_TOTAL_CLIENTE"])
 
-        classifier = classification.CNPJClassifier(df)
-        classifier.classify()
+        #classifier = classification.CNPJClassifier(df)
+        #classifier.classify()
 
        
 
