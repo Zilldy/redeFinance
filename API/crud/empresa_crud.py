@@ -2,6 +2,30 @@ from typing import List
 from dbconfig import execute_query
 from models.Empresa import *
 
+def get_all_empresas() -> List[EmpresaSimples]:
+    query = """
+        SELECT *
+        FROM (
+            SELECT DISTINCT 
+                ID, 
+                DS_CNAE AS CNAE, 
+                ISNULL(CLASSIFICACAO, 'Não Classificado') AS CLASSIFICACAO
+        FROM CLIENTE
+        ) AS SUB;
+    """
+    resultados = execute_query(query)
+    empresas = []
+    for row in resultados:
+        empresas.append(
+            EmpresaSimples(
+                nome=row.get("ID"),
+                cnpj=row.get("ID"),
+                classificacao=row.get("CLASSIFICACAO", ""),
+                cnae=row.get("CNAE", "")
+                )
+            )
+    return empresas
+
 def get_empresa_by_id(id: str) -> Empresa:
     query = f"""
         SELECT DISTINCT

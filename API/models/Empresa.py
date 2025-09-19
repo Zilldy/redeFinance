@@ -39,3 +39,9 @@ class Empresa(BaseModel):
     saldos: List[Saldo]
     relacionamentos: Relacionamentos
     semelhantes: List[Semelhante]
+
+class EmpresaSimples(BaseModel):
+    nome: str
+    cnpj: str
+    classificacao: str
+    cnae: str
