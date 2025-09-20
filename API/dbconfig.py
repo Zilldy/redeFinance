@@ -8,6 +8,18 @@ database = 'CHALLANGE'  # Altere para o nome do seu banco de dados, se necessár
 username = 'dev'
 password = '1234'
 
+################################## NICKÃO ########################################
+#server = r'(LocalDB)\MSSQLLocalDB'
+#database = 'CHALLENGE'  # Altere para o nome do seu banco de dados, se necessário
+#username = 'dev'
+#password = '1234'
+
+################################### BIGAS ########################################
+#server = r'(LocalDB)\MSSQLLocalDB'
+#database = 'CHALLENGE'  # Altere para o nome do seu banco de dados, se necessário
+#username = 'dev'
+#password = '1234'
+
 def get_connection():
     conn_str = (
         f"DRIVER={{ODBC Driver 17 for SQL Server}};"
