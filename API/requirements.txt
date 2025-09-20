@@ -3,3 +3,4 @@ pyodbc
 fastapi
 pydantic
 uvicorn
+ollama

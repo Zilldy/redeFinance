@@ -14,6 +14,12 @@ services:
       - ./database/procedures:/var/opt/mssql/data/procedures
       - ./database/csv:/var/opt/mssql/data/csv
 
+  ollama:
+    image: ollama/ollama:latest
+    container_name: redefinance_ollama
+    ports:
+      - "11434:11434"
+    restart: unless-stopped
   api:
     build:
       context: ./API
@@ -22,7 +28,9 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ConnectionStrings__DefaultConnection=Server=db;Database=RedefinanceDB;User Id=sa;Password=M@sterk3y;
+      - OLLAMA_HOST=http://ollama:11434
     ports:
       - "8000:8000"
     depends_on:
       - db
+      - ollama
