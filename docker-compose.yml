@@ -6,6 +6,7 @@ services:
     ports:
       - "11434:11434"
     restart: unless-stopped
+    entrypoint: ["sh", "-c", "ollama serve & sleep 5 && ollama pull llama3 && wait"]
   api:
     build:
       context: ./API
