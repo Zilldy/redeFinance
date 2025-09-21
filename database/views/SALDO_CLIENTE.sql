@@ -14,5 +14,5 @@ ALTER VIEW SALDO_CLIENTE AS
 	  ) AS SALDO_TOTAL_CLIENTE
 	FROM FATURAMENTO_CLIENTE
 	JOIN CLIENTE ON ID = CLIENTE
-	--WHERE CLASSIFICACAO IS NULL /* Caso precise validar todos os clientes é só comentar o filtro*/
+	WHERE CLASSIFICACAO IS NULL /* Caso precise validar todos os clientes é só comentar o filtro*/
 	GROUP BY CLIENTE, DT_ABRT

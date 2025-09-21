@@ -15,16 +15,18 @@ if __name__ == "__main__":
 
 
         df = dbconfig.DatabaseTableData().preencher_dataframe("SALDO_CLIENTE")
-        # print(df["CLIENTE"])
-        # print()
-        # print(df["DT_ABRT"])
-        # print()
-        # print(df["SALDO_TOTAL_CLIENTE"])
+        if df is None:
+            print("Nenhum cliente encontrado para ser classificado.")
+        else:
+            print("Total de clientes a serem classificados:", df.shape[0])
+            print(df["CLIENTE"])
+            print()
+            print(df["DT_ABRT"])
+            print()
+            print(df["SALDO_TOTAL_CLIENTE"])
 
-        #classifier = classification.CNPJClassifier(df)
-        #classifier.classify()
-
-       
+            classifier = classification.CNPJClassifier(df)
+            classifier.classify()
 
         conn.close()
     except Exception as e:

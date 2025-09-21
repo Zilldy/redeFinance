@@ -2,11 +2,18 @@ from typing import List
 import pyodbc
 import pandas as pd
 
+
+# Configurações de conexão Para SQL Docker
+server = 'redefinance_sql,1433'
+database = 'CHALLENGE'
+username = 'sa'
+password = 'M@sterk3y'
+
 # Configurações de conexão
-server = r'(LocalDB)\MSSQLLocalDB'
-database = 'CHALLANGE'  # Altere para o nome do seu banco de dados, se necessário
-username = 'dev'
-password = '1234'
+# server = r'(LocalDB)\MSSQLLocalDB'
+# database = 'CHALLANGE'  # Altere para o nome do seu banco de dados, se necessário
+# username = 'dev'
+# password = '1234'
 
 ################################## NICKÃO ########################################
 #server = r'(LocalDB)\MSSQLLocalDB'
@@ -27,6 +34,7 @@ def get_connection():
         f"DATABASE={database};"
         f"UID={username};"
         f"PWD={password};"
+        f"TrustServerCertificate=yes;"
     )
     print(server)
     return pyodbc.connect(conn_str)
