@@ -1,19 +1,12 @@
-version: '3.8'
+#version: '3.8'
 services:
-  db:
-    image: mcr.microsoft.com/mssql/server:2022-latest
-    container_name: redefinance
-    environment:
-      - ACCEPT_EULA=Y
-      - SA_PASSWORD=M@sterk3y
-      - MSSQL_PID=Express
+  ollama:
+    image: ollama/ollama:latest
+    container_name: redefinance_ollama
     ports:
-      - "1433:1433"
-    volumes:
-      - ./mssql_data:/var/opt/mssql/data
-      - ./database/procedures:/var/opt/mssql/data/procedures
-      - ./database/csv:/var/opt/mssql/data/csv
-
+      - "11434:11434"
+    restart: unless-stopped
+    entrypoint: ["sh", "-c", "ollama serve & sleep 5 && ollama pull llama3 && wait"]
   api:
     build:
       context: ./API
@@ -22,7 +15,25 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ConnectionStrings__DefaultConnection=Server=db;Database=RedefinanceDB;User Id=sa;Password=M@sterk3y;
+      - OLLAMA_HOST=http://ollama:11434
     ports:
       - "8000:8000"
     depends_on:
       - db
+      - ollama
+  db:
+    build:
+      context: ./sql-server
+      dockerfile: Dockerfile
+    container_name: redefinance_sql
+    ports:
+      - "14330:1433"
+    volumes:
+      - ./mssql_data:/var/opt/mssql/data
+      - ./database/procedures:/var/opt/mssql/data/procedures
+      - ./database/csv:/var/opt/mssql/data/csv
+      - ./sql-server/entrypoint.sh:/entrypoint.sh
+      - ./sql-server/restore-db.sql:/restore-db.sql
+      - ./sql-server/backuup/SeuBanco.bak:/backuup/SeuBanco.bak
+    entrypoint: ["/bin/bash", "/entrypoint.sh"]
+

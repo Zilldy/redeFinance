@@ -105,7 +105,7 @@ def get_relacionamentos(id: str) -> Relacionamentos:
     recebedores = get_recebedores(id)
     return Relacionamentos(pagadores=pagadores, recebedores=recebedores)
 
-def get_pagadores(id: str) -> List[RelacionamentoPagadores]:
+def get_pagadores(id: str) -> List[Relacionamento]:
     query = f"""
     SELECT TOP 5
         R.PARCEIRO,
@@ -136,7 +136,7 @@ def get_pagadores(id: str) -> List[RelacionamentoPagadores]:
     pagadores = []
     for row in resultados:
         pagadores.append(
-            RelacionamentoPagadores(
+            Relacionamento(
                     cnpj=row.get("PARCEIRO"),
                     nome=row.get("PARCEIRO"),
                     totalEnt=row.get("TOTAL_ENTRADA", 0.0),
@@ -146,7 +146,7 @@ def get_pagadores(id: str) -> List[RelacionamentoPagadores]:
             )
     return pagadores
 
-def get_recebedores(id: str) -> List[RelacionamentoRecebedores]:
+def get_recebedores(id: str) -> List[Relacionamento]:
     query = f"""
     SELECT TOP 5
         R.PARCEIRO,
@@ -177,7 +177,7 @@ def get_recebedores(id: str) -> List[RelacionamentoRecebedores]:
     recebedores = []
     for row in resultados:
         recebedores.append(
-            RelacionamentoRecebedores(
+            Relacionamento(
                     cnpj=row.get("PARCEIRO"),
                     nome=row.get("PARCEIRO"),
                     totalEnt=row.get("TOTAL_ENTRADA", 0.0),
