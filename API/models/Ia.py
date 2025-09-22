@@ -3,7 +3,7 @@ from pydantic import BaseModel
 
 
 class ChatRequest(BaseModel):
-    message: str
+    json_object: object
 
 class ChatResponse(BaseModel):
     ReplyProducts: List['ReplyProducts']
