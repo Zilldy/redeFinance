@@ -1,1 +1,21 @@
-<p>cnpjs-list works!</p>
+<div class="dashboard-container">
+    <!-- CARDS -->
+     <div class="cards-grid">
+        <app-metric-card 
+            *ngFor="let card of infoCards" 
+            [title]="card.title" 
+            [subtitle]="card.subtitle">
+        </app-metric-card>
+    </div>
+
+    <!-- GRÁFICOS -->
+    <div class="charts-grid">
+        <app-pie-chart [data]="generalAnalysis?.classificacoes"></app-pie-chart>
+        <app-bar-chart [data]="generalAnalysis?.tipoTransacao"></app-bar-chart>
+    </div>
+
+      <!-- LISTAGEM DE EMPRESAS -->
+    <div class="companies-grid">
+        <app-company-list></app-company-list>
+    </div>
+</div>

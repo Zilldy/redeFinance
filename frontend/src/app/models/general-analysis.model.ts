@@ -1,5 +1,3 @@
-
-
 export enum TransactionTypeEnum {
   PIX = 'PIX',
   TED = 'TED',
@@ -8,13 +6,13 @@ export enum TransactionTypeEnum {
 }
 
 export interface TransactionTypeCount {
-  type: TransactionTypeEnum;
-  quantity: number;
+  tipo: TransactionTypeEnum;
+  quantidade: number;
 }
 
 export interface TransactionType {
-  type: TransactionTypeEnum;
-  totalValue: number;
+  tipo: TransactionTypeEnum;
+  valor_total: number;
 }
 
 export enum ClassificationEnum {
@@ -26,15 +24,15 @@ export enum ClassificationEnum {
 }
 
 export interface Classification {
-  classification: ClassificationEnum;
-  quantity: number;
-  percentage: number;
+  classificacao: ClassificationEnum;
+  porcentagem: number;
+  quantidade: number;
 }
 
 export class GeneralAnalysis {
-  totalCompanies!: number;
-  decliningCompanies!: number;
-  transactionTypeCount!: TransactionTypeCount;
-  transactionTypes!: TransactionType[];
-  classifications!: Classification[];
+  total_empresas!: number;
+  empresas_declinio!: number;
+  qtdTipoTransacao!: TransactionTypeCount;
+  tipoTransacao!: TransactionType[];
+  classificacoes!: Classification[];
 }

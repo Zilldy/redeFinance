@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { GeneralAnalysis } from '../../services/general-analysis';
+import { GeneralAnalysisService } from '../../services/general-analysis';
 
 @Component({
   selector: 'app-cnpj-detail',
@@ -8,6 +8,6 @@ import { GeneralAnalysis } from '../../services/general-analysis';
   styleUrl: './cnpj-detail.scss'
 })
 export class CnpjDetail implements OnInit{
-  constructor(private generalAnalysisService: GeneralAnalysis) {}
+  constructor(private generalAnalysisService: GeneralAnalysisService) {}
   ngOnInit(){}
 }

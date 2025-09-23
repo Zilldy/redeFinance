@@ -1,0 +1,10 @@
+<div class="chart-card">
+  <h3 class="chart-title">Quantidade x Classificação de Perfil</h3>
+  <div class="chart-container" *ngIf="isBrowser">  
+    <canvas baseChart
+            [data]="pieChartData"
+            [options]="pieChartOptions"
+            [type]="'pie'">
+    </canvas>   
+  </div>
+</div>
