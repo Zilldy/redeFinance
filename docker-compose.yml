@@ -3,6 +3,13 @@ services:
   ollama:
     image: ollama/ollama:latest
     container_name: redefinance_ollama
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
     ports:
       - "11434:11434"
     restart: unless-stopped

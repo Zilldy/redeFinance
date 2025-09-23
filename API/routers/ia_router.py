@@ -20,7 +20,7 @@ RULE_PROMPT = (
     - semelhantes: empresas similares e seus estágios (Peso 1)\n
     - Demais campos do JSON que considerar importante para a analise (Peso 1)\n\n
     Responda apenas com um JSON em português, sem explicações ou texto extra, com os seguintes campos:\n
-    - \"ReplyProducts\": uma lista de objetos, cada um contendo os campos \"product\" (nome do produto bancário recomendado que sera oferecido do banco para o cliente) e \"why\" (justificativa para a recomendação personalizada para o cliente recebido no JSON).\n
+    - \"ReplyProducts\": uma lista de objetos que não pode vir vazia, cada um contendo os campos \"product\" (nome do produto bancário recomendado que sera oferecido do banco para o cliente) e \"why\" (justificativa para a recomendação personalizada para o cliente recebido no JSON).\n
     JSON da empresa:\n
     """
 )
