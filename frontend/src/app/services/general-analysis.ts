@@ -1,12 +1,13 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { GeneralAnalysis } from '../models/general-analysis.model';
 
 @Injectable({
   providedIn: 'root'
 })
-export class GeneralAnalysis {
-  private apiUrl = 'http://127.0.0.1:8000/api';
+export class GeneralAnalysisService {
+  private apiUrl = 'http://localhost:8000/api';
 
   constructor(private http: HttpClient) {}
 

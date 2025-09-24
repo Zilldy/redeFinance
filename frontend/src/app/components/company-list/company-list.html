@@ -1,0 +1,12 @@
+<div class="company-list">
+  <h3 class="list-title">Empresas</h3>
+
+  <div class="company-grid">
+    <div class="company-card" *ngFor="let company of companies">
+      <h4 class="company-name">{{ company.nome }}</h4>
+      <p class="company-cnpj">CNPJ: {{ company.cnpj }}</p>
+      <p class="company-class">Classificação: {{ company.classificacao }}</p>
+      <p class="company-cnae">CNAE: {{ company.cnae }}</p>
+    </div>
+  </div>
+</div>
