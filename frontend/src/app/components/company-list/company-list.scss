@@ -2,7 +2,8 @@
   border: 2px solid #b30000;
   border-radius: 8px;
   padding: 1rem;
-  background: #fff;
+  background-color: var(--surface-color);
+  color: var(--text-color);
 
   .list-title {
     font-size: 1.2rem;
@@ -29,7 +30,7 @@
     border: 1px solid #ddd;
     border-radius: 8px;
     padding: 1rem;
-    background: #fafafa;
+    background: var(--surface-color);
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
     transition: transform 0.2s ease;
 
@@ -42,14 +43,14 @@
       font-size: 1rem;
       font-weight: bold;
       margin: 0 0 0.5rem 0;
-      color: #333;
+      color: var(--text-color);
     }
 
     .company-cnpj,
     .company-class,
     .company-cnae {
       font-size: 0.85rem;
-      color: #666;
+      color: var(--text-color);
       margin: 0.2rem 0;
     }
   }

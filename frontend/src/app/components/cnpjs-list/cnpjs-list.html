@@ -9,9 +9,12 @@
     </div>
 
     <!-- GRÁFICOS -->
-    <div class="charts-grid">
-        <app-pie-chart [data]="generalAnalysis?.classificacoes"></app-pie-chart>
-        <app-bar-chart [data]="generalAnalysis?.tipoTransacao"></app-bar-chart>
+    <div class="charts-grid" *ngIf="!isLoading && generalAnalysis">
+        <app-pie-chart *ngIf="generalAnalysis.classificacoes?.length" [data]="generalAnalysis.classificacoes"></app-pie-chart>
+        <app-bar-chart *ngIf="generalAnalysis.tipoTransacao?.length" [data]="generalAnalysis.tipoTransacao"></app-bar-chart>
+    </div>
+    <div class="loading-message" *ngIf="isLoading">
+        <span class="loading-text">Carregando dados...</span>
     </div>
 
       <!-- LISTAGEM DE EMPRESAS -->

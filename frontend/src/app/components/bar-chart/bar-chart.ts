@@ -22,17 +22,30 @@ export class BarChartComponent {
   }
 
   ngOnInit() {
+    if (!this.isBrowser) return;
+    
     this.data?.forEach((item) => {
       this.typeLIst.push(item.tipo);
       this.totalValueList.push(item.valor_total);
     });
+
+    // Atualiza os dados do gráfico após processar
+    this.barChartData = {
+      labels: this.typeLIst,
+      datasets: [
+        {
+          data: this.totalValueList,
+          backgroundColor: ['#b30000']
+        }
+      ]
+    };
   }
 
   barChartData: ChartConfiguration<'bar'>['data'] = {
-    labels: this.typeLIst,
+    labels: [],
     datasets: [
       {
-        data: this.totalValueList,
+        data: [],
         backgroundColor: ['#b30000']
       }
     ]
