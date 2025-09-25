@@ -1,0 +1,19 @@
+.navbar {
+  display: flex;
+  justify-content: space-between; // joga um pra esquerda e outro pra direita
+  align-items: center;
+  background: #b30000;
+  padding: 0.8rem 1rem;
+  color: #fff;
+
+  .navbar-left img {
+    height: 32px;           // ajusta o tamanho da logo
+    object-fit: contain;
+  }
+
+  .navbar-right span {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #fff;
+  }
+}

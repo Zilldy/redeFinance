@@ -18,6 +18,7 @@ import { CompanyListComponent } from '../company-list/company-list';
 })
 export class CnpjsList  implements OnInit{ 
   companies: Company[] = [];
+  generalAnalysis: GeneralAnalysis | undefined;
   substitle = 100;
   infoCards:any = [];
   generalAnalysis: GeneralAnalysis | undefined;
@@ -34,7 +35,9 @@ export class CnpjsList  implements OnInit{
   }
 
   loadCompanies(){
-    this.companyService.getAllCompanies().subscribe((c)=>{});
+    this.companyService.getAllCompanies().subscribe((c)=>{
+      this.companies = c;
+    });
   }
 
   loadCompanyDetail(id: string){

@@ -9,7 +9,7 @@
     font-size: 1.2rem;
     font-weight: bold;
     color: #b30000;
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
   }
 
   .company-grid {
@@ -35,8 +35,8 @@
     transition: transform 0.2s ease;
 
     &:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      transform: translateY(-5px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
     }
 
     .company-name {
