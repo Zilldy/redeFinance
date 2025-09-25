@@ -21,6 +21,7 @@ export class CnpjsList  implements OnInit{
   substitle = 100;
   infoCards:any = [];
   generalAnalysis: GeneralAnalysis | undefined;
+  isLoading = true;
   constructor(
     private companyService: Companies,
     private generalAnalysisService: GeneralAnalysisService
@@ -41,16 +42,26 @@ export class CnpjsList  implements OnInit{
   }
 
   loadGeneralAnalysis(){
-    this.generalAnalysisService.getGeneralAnalysis().subscribe((a)=>{
-      console.log("General Analysis: ", a);
-      this.generalAnalysis = a;
-      const subtitlePaymentType = `${a.qtdTipoTransacao.tipo} - ${a.qtdTipoTransacao.quantidade}`;
-        this.infoCards = [
-          { title: "Total Empresas", subtitle: a.total_empresas },
-          { title: "Empresas em Declínio", subtitle: a.empresas_declinio },
-          { title: "Maior Tipo de Pagamento X Quantidade", subtitle: subtitlePaymentType },
-        ];
-        console.log("INFO CARDS: ", this.infoCards);
-    });
+    this.isLoading = true;
+    this.generalAnalysisService.getGeneralAnalysis().subscribe(
+      (response) => {
+        console.log("General Analysis: ", response);
+        if (response && response.classificacoes?.length && response.tipoTransacao?.length) {
+          this.generalAnalysis = response;
+          const subtitlePaymentType = `${response.qtdTipoTransacao.tipo} - ${response.qtdTipoTransacao.quantidade}`;
+          this.infoCards = [
+            { title: "Total Empresas", subtitle: response.total_empresas },
+            { title: "Empresas em Declínio", subtitle: response.empresas_declinio },
+            { title: "Maior Tipo de Pagamento X Quantidade", subtitle: subtitlePaymentType },
+          ];
+          console.log("INFO CARDS: ", this.infoCards);
+        }
+        this.isLoading = false;
+      },
+      (error) => {
+        console.error('Erro ao carregar análise geral:', error);
+        this.isLoading = false;
+      }
+    );
   }
 }

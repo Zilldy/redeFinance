@@ -22,6 +22,10 @@ export class PieChartComponent {
   }
 
   ngOnInit() {
+    if (!this.isBrowser) return;
+    
+    console.log(this.data);
+
     this.data?.forEach((item) => {
       if(item.porcentagem < 1){
         this.classificationsList.push(`${item.classificacao} - ${item.porcentagem} (imperceptível)`);
@@ -30,12 +34,21 @@ export class PieChartComponent {
       }
       this.percentagesList.push(item.porcentagem);
     });
+
+    // Atualiza os dados do gráfico após processar
+    this.pieChartData = {
+      labels: this.classificationsList,
+      datasets: [{
+        data: this.percentagesList,
+        backgroundColor: ['#b30000', '#3e5b73', '#262626','#afb4bc', '#ccc']
+      }]
+    };
   }
 
   pieChartData: ChartConfiguration<'pie'>['data'] = {
-    labels: this.classificationsList,
+    labels: [],
     datasets: [{
-      data: this.percentagesList,
+      data: [],
       backgroundColor: ['#b30000', '#3e5b73', '#262626','#afb4bc', '#ccc']
     }]
   };

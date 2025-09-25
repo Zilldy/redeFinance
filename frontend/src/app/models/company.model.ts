@@ -1,6 +1,6 @@
 export class Company {
   cnpj!: string;
-  name!: string;
-  classification!: string;
+  nome!: string;
+  classificacao!: string;
   cnae!: string;
 }
