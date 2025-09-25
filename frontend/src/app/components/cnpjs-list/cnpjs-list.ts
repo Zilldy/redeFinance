@@ -21,7 +21,6 @@ export class CnpjsList  implements OnInit{
   generalAnalysis: GeneralAnalysis | undefined;
   substitle = 100;
   infoCards:any = [];
-  generalAnalysis: GeneralAnalysis | undefined;
   isLoading = true;
   constructor(
     private companyService: Companies,
