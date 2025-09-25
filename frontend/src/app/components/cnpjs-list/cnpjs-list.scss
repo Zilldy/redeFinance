@@ -7,6 +7,21 @@
   margin-right: 10rem;
 }
 
+.loading-message {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
+  background-color: var(--surface-color);
+  border-radius: 8px;
+  border: 2px solid #b30000;
+}
+
+.loading-text {
+  color: var(--text-color);
+  font-size: 1.2rem;
+}
+
 .cards-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
