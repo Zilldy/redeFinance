@@ -28,7 +28,7 @@
 .metric-card {
   border: 2px solid #b30000;
   border-radius: 8px;
-  padding: 1rem;
+  padding: 0.8rem;
   text-align: left;
   background: #fff;
   transition: transform 0.1s ease-in-out;
@@ -50,5 +50,6 @@
     font-weight: bold;
     color: #000;
     margin: 0;
+    margin-bottom: 0.6rem;
   }
 }
