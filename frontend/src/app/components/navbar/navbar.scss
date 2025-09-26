@@ -11,9 +11,21 @@
     object-fit: contain;
   }
 
-  .navbar-right span {
-    font-size: 1.3rem;
-    font-weight: bold;
-    color: #fff;
+  .navbar-right {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+    span {
+      font-size: 1.3rem;
+      font-weight: bold;
+      color: #fff;
+    }
+
+    app-theme-toggle {
+      ::ng-deep .theme-toggle-btn i {
+        color: #fff;
+      }
+    }
   }
 }

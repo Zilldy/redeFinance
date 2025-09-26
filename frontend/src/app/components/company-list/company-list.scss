@@ -1,3 +1,5 @@
+@use '@angular/material' as mat;
+
 .company-list {
   border: 2px solid #b30000;
   border-radius: 8px;
@@ -54,4 +56,16 @@
       margin: 0.2rem 0;
     }
   }
+  
+  .paginator {
+    background-color: var(--surface-color);
+    color: var(--text-color);
+  }
+  
+  ::ng-deep .mat-mdc-paginator .mat-mdc-select-trigger {
+    color: var(--text-color) !important;
+    border-radius: 4px;
+    padding: 0.2rem 0.6rem;
+  }
+  
 }
