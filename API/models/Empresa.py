@@ -16,22 +16,15 @@ class Relacionamentos(BaseModel):
     pagadores: List[Relacionamento]
     recebedores: List[Relacionamento]
 
-class Semelhante(BaseModel):
-    cnpj: str
-    nome: str
-    cnae: str
-    classificacao: str | None
-
 class Empresa(BaseModel):
     nome: str
     cnpj: str
-    saldo_total: float
+    saldo_total: float | None
     medLucro: float | None
     classificacao: str | None
     cnae: str
     saldos: List[Saldo]
     relacionamentos: Relacionamentos
-    semelhantes: List[Semelhante]
 
 class EmpresaSimples(BaseModel):
     nome: str
