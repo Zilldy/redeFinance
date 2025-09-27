@@ -90,7 +90,7 @@ def get_saldos(id: str) -> List[Saldo]:
         saldos.append(
             Saldo(
                 data=row.get("MES_REFERENCIA"), 
-                saldo=row.get("SALDO_MES", 0.0).replace(',', '')
+                saldo=row.get("SALDO_MES", 0.0) if row.get("SALDO_MES") is not None else 0.0
                 )
             )
     return saldos
@@ -129,7 +129,7 @@ def get_pagadores_por_tipo(id: str, tipo_pagador: str) -> List[Relacionamento]:
     ) R
     WHERE R.{tipo_pagador} <> 0
     GROUP BY R.PARCEIRO
-    ORDER BY INTERACOES DESC, TOTAL_ENTRADA DESC
+    ORDER BY INTERACOES DESC, TOTAL_{tipo_pagador} DESC
     """
     resultados = execute_query(query)
     recebedores = []

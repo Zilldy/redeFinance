@@ -21,15 +21,21 @@ class CNPJClassifier:
         dt_criacao = pd.to_datetime(row['DT_ABRT'])
         cliente = row['CLIENTE']
 
-        # Regra: Início
-        if self._is_new_company(dt_criacao):
-            return 'Início'
 
+        
         # Buscar saldo do último mês no banco de dados
         saldo_ultimo_mes = self._get_last_month_balance(cliente)
         count_meses = self._qtd_meses(cliente)
         media_min, media_max = self._calculate_balance_range(saldo_total, count_meses)
 
+        # Regra: Não Classificado
+        if saldo_total is None or count_meses == 0:
+            return 'Não Classificado'
+
+        # Regra: Início
+        if self._is_new_company(dt_criacao):
+            return 'Início'
+        
         # Regra: Expansão
         if saldo_ultimo_mes > media_max:
             return 'Expansão'
@@ -88,8 +94,13 @@ class CNPJClassifier:
         """
         Calcula a média mínima e máxima com margem de 15%.
         """
+        if saldo_total is None or count_meses == 0:
+            return 0.0, 0
         media_saldo = saldo_total / count_meses
         margem = media_saldo * 0.15
+        if(margem < 0):
+            return media_saldo + margem, media_saldo - margem
+        
         return media_saldo - margem, media_saldo + margem
 
     def _qtd_meses(self, cliente) -> float:
