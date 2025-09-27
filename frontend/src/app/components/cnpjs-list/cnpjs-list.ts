@@ -1,72 +1,92 @@
-import { Component, OnInit } from '@angular/core';
-import { Companies } from '../../services/companies';
-import { Company } from '../../models/company.model';
+import { Component } from '@angular/core';
+import { forkJoin, Observable } from 'rxjs';
+import { finalize, map, catchError } from 'rxjs/operators';
+import { CompaniesService } from '../../services/companies';
 import { GeneralAnalysisService } from '../../services/general-analysis';
+import { Company } from '../../models/company.model';
+import { GeneralAnalysis } from '../../models/general-analysis.model';
 import { CommonModule } from '@angular/common';
 import { MetricCardComponent } from '../metric-card/metric-card';
-import { GeneralAnalysis } from '../../models/general-analysis.model';
 import { PieChartComponent } from '../pie-chart/pie-chart';
 import { BarChartComponent } from '../bar-chart/bar-chart';
 import { CompanyListComponent } from '../company-list/company-list';
-import { CompanyDetail } from '../../models/company-detail.model';
+import { RouterModule } from '@angular/router';
+import { LineChartComponent } from '../line-chart/line-chart';
 
 @Component({
   selector: 'app-cnpjs-list',
   standalone: true,
-  imports: [CommonModule, MetricCardComponent, PieChartComponent, BarChartComponent, CompanyListComponent], 
+  imports: [
+    CommonModule,
+    MetricCardComponent,
+    PieChartComponent,
+    BarChartComponent,
+    CompanyListComponent,
+    RouterModule,
+    LineChartComponent
+  ],
   templateUrl: './cnpjs-list.html',
   styleUrls: ['./cnpjs-list.scss']
 })
-export class CnpjsList  implements OnInit{ 
-  companies: Company[] = [];
-  generalAnalysis: GeneralAnalysis | undefined;
-  infoCards:any = [];
+export class CnpjsList {
+  companies$!: Observable<Company[]>;
+  generalAnalysis$!: Observable<GeneralAnalysis>;
+  infoCards$!: Observable<any[]>;
 
-  isAnalysisLoaded: boolean = false;
-  isCompaniesLoaded: boolean = false;
-  substitle = 100;
-  
+  isLoading = true;
+  hasError = false;
+
   constructor(
-    private companyService: Companies,
+    private companyService: CompaniesService,
     private generalAnalysisService: GeneralAnalysisService
   ) {}
 
-  ngOnInit(){
-    this.loadCompanies();
-    this.loadGeneralAnalysis();
+  ngOnInit() {
+    this.loadData();
   }
 
-  loadCompanies(){
-    this.companyService.getAllCompanies().subscribe({
-      next: (companies)=>{
-        this.companies = companies;
-        this.isCompaniesLoaded = true; 
-      },
-      error: (err)=>{
-        console.error("Erro ao carregar empresas", err);
-        this.isCompaniesLoaded = false;
-      },
-      complete: ()=>{}
-    });
-  }
+  loadData() {
+    this.isLoading = true;
+    this.hasError = false;
 
-  loadGeneralAnalysis() {
-    this.generalAnalysisService.getGeneralAnalysis().subscribe({
-      next: (analysis) => {
-        this.generalAnalysis = analysis;
-        this.isAnalysisLoaded = true;
-        const subtitlePaymentType = `${analysis.qtdTipoTransacao.tipo} - ${analysis.qtdTipoTransacao.quantidade}`;
-        this.infoCards = [
-          { title: "Total Empresas", subtitle: analysis.total_empresas },
-          { title: "Empresas em Declínio", subtitle: analysis.empresas_declinio },
+    this.companies$ = this.companyService.getAllCompanies().pipe(
+      catchError((err) => {
+        console.error('Erro ao carregar empresas', err);
+        this.hasError = true;
+        this.isLoading = false;
+        throw err;
+      })
+    );
+
+    this.generalAnalysis$ = this.generalAnalysisService.getGeneralAnalysis().pipe(
+      catchError((err) => {
+        console.error('Erro ao carregar análise', err);
+        this.hasError = true;
+        this.isLoading = false;
+        throw err;
+      })
+    );
+
+    this.infoCards$ = this.generalAnalysis$.pipe(
+      map((analysis) => {
+        const formatter = new Intl.NumberFormat('pt-BR');
+        const subtitlePaymentType = `${analysis.qtdTipoTransacao.tipo} - ${formatter.format(analysis.qtdTipoTransacao.quantidade)}`;
+        return [
+          { title: "Total Empresas", subtitle: formatter.format(analysis.total_empresas) },
+          { title: "Empresas em Declínio", subtitle: formatter.format(analysis.empresas_declinio) },
           { title: "Maior Tipo de Pagamento X Quantidade", subtitle: subtitlePaymentType },
         ];
-      },
-      error: (err) => {
-        console.error("Erro ao carregar análise geral", err);
-        this.isAnalysisLoaded = false;
-      },
-      complete: () => {},
-    });
+      })
+    );
+
+    forkJoin([this.companies$, this.generalAnalysis$])
+      .pipe(finalize(() => (this.isLoading = false)))
+      .subscribe({
+        error: () => (this.hasError = true),
+      });
+  }
+
+  reloadPage() {
+    this.loadData();
   }
 }

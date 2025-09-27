@@ -1,1 +1,79 @@
-<p>cnpj-detail works!</p>
+<ng-container *ngIf="isLoading; else notLoading">
+  <div class="loader-container">
+    <div class="loader"></div>
+    <p>Carregando empresa...</p>
+  </div>
+</ng-container>
+
+<ng-template #notLoading>
+  <div *ngIf="hasError; else content" class="error-container">
+    <p class="text-danger">Empresa não encontrada ou ocorreu um erro.</p>
+    <button class="btn-home" (click)="goHome()">Voltar para Início</button>
+  </div>
+</ng-template>
+
+<ng-template #content>
+  <div class="dashboard-container">
+    <div class="cards-grid">
+      <app-metric-card 
+        *ngFor="let card of infoCards"
+        [title]="card.title" 
+        [subtitle]="card.subtitle">
+      </app-metric-card>
+    </div>
+
+    <ng-container *ngIf="companyDetail.classificacao !== 'Não Classificado'">
+      <app-line-chart
+        [saldos]="companyDetail.saldos">
+      </app-line-chart>
+      <!-- grid bootstrap -->
+      <div class="row mt-4" style="height: 100%;">
+        <!-- tabela -->
+        <div class="col-md-8 relationship-table">
+          <div class="card relacionamentos">
+            <div class="card-header">
+              <h3>Principais Relacionamentos</h3>
+              <mat-slide-toggle 
+                color="warn" 
+                (change)="onToggleChange($event)"
+                [disabled]="!companyDetail.relacionamentos.pagadores?.length || !companyDetail.relacionamentos.recebedores?.length">
+                <span [ngClass]="selectedView === 'pagadores' ? 'text-pagadores' : 'text-recebedores'">
+                  {{ selectedView === 'pagadores' ? 'Pagadores' : 'Recebedores' }}
+                </span>
+              </mat-slide-toggle>
+
+            </div>
+            <table>
+              <thead>
+                <tr>
+                  <th>CNPJ/CPF</th>
+                  <th>Nome</th>
+                  <th>Entrada</th>
+                  <th>Saída</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let r of (selectedView === 'pagadores' 
+                                      ? companyDetail.relacionamentos.pagadores 
+                                      : companyDetail.relacionamentos.recebedores)">
+                  <td class="linha">{{ r.cnpj }}</td>
+                  <td class="linha">{{ r.nome }}</td>
+                  <td class="entrada">+{{ r.totalEnt | currency:'BRL':'symbol':'1.2-2' }}</td>
+                  <td class="saida">-{{ r.totalSai | currency:'BRL':'symbol':'1.2-2' }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- carrossel -->
+        <div class="col-md-4">
+          <app-products-carousel
+            [companyDetail]="companyDetail">
+          </app-products-carousel>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</ng-template >
+
