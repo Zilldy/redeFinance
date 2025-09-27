@@ -3,31 +3,29 @@ from backend import classification
 import pyodbc
 
 if __name__ == "__main__":
-    print("Drivers ODBC disponíveis:")
-    for driver in pyodbc.drivers():
-        print(driver)
-    print("\nTestando conexão com o banco de dados...")
+    print(r"""
+██████╗ ███████╗██████╗ ███████╗███████╗██╗███╗   ██╗ █████╗ ███╗   ██╗ ██████╗███████╗
+██╔══██╗██╔════╝██╔══██╗██╔════╝██╔════╝██║████╗  ██║██╔══██╗████╗  ██║██╔════╝██╔════╝
+██████╔╝█████╗  ██║  ██║█████╗  █████╗  ██║██╔██╗ ██║███████║██╔██╗ ██║██║     █████╗  
+██╔══██╗██╔══╝  ██║  ██║██╔══╝  ██╔══╝  ██║██║╚██╗██║██╔══██║██║╚██╗██║██║     ██╔══╝  
+██║  ██║███████╗██████╔╝███████╗██║     ██║██║ ╚████║██║  ██║██║ ╚████║╚██████╗███████╗
+╚═╝  ╚═╝╚══════╝╚═════╝ ╚══════╝╚═╝     ╚═╝╚═╝  ╚═══╝╚═╝  ╚═╝╚═╝  ╚═══╝ ╚═════╝ ╚═════╝
+    """)
     try:
         conn = dbconfig.get_connection()
-        print("Conexão bem-sucedida com o banco de dados!")
 
-        resultados = dbconfig.consultar_tabela("CLIENTE")
-
+        print("Conexão bem-sucedida com o banco de dados! \n")
 
         df = dbconfig.DatabaseTableData().preencher_dataframe("SALDO_CLIENTE")
-        if df is None:
-            print("Nenhum cliente encontrado para ser classificado.")
+        if df is None or df.empty:
+            print("Nenhum cliente encontrado para ser classificado.\n")
         else:
-            print("Total de clientes a serem classificados:", df.shape[0])
-            print(df["CLIENTE"])
-            print()
-            print(df["DT_ABRT"])
-            print()
-            print(df["SALDO_TOTAL_CLIENTE"])
+            print("Total de clientes a serem classificados:", df.shape[0], "\n")
+            print("Lista de clientes classificados:\n", df[["CLIENTE"]].head(), "\n")
 
             classifier = classification.CNPJClassifier(df)
             classifier.classify()
 
         conn.close()
     except Exception as e:
-        print(f"Erro ao conectar: {e}")
+        print(f"Erro ao conectar ao banco de dados: {e}")

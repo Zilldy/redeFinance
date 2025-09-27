@@ -8,7 +8,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ConnectionStrings__DefaultConnection=Server=db;Database=RedefinanceDB;User Id=sa;Password=M@sterk3y;
-      - GEMINI_API_KEY=AIzaSyD-EXAMPLEKEY-1234567890
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
     ports:
       - "8000:8000"
     depends_on:

@@ -1,10 +1,12 @@
 from typing import List
 import pyodbc
 import pandas as pd
+import warnings
 
 
 # Configurações de conexão Para SQL Docker
-server = 'redefinance_sql,1433'
+#server = 'redefinance_sql,1433'
+server = 'localhost,14330'
 database = 'CHALLENGE'
 username = 'sa'
 password = 'M@sterk3y'
@@ -36,7 +38,6 @@ def get_connection():
         f"PWD={password};"
         f"TrustServerCertificate=yes;"
     )
-    print(server)
     return pyodbc.connect(conn_str)
 
 def consultar_tabela(nome_tabela):
@@ -74,7 +75,9 @@ class DatabaseTableData:
         try:
             if query is None:
                 query = f"SELECT * FROM {nome_tabela}"
-            self.df = pd.read_sql(query, conn)
+            with warnings.catch_warnings():
+                warnings.simplefilter("ignore", UserWarning)
+                self.df = pd.read_sql(query, conn)
         finally:
             conn.close()
 

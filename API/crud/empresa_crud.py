@@ -45,7 +45,7 @@ def get_empresa_by_id(id: str) -> Empresa:
             C.CLASSIFICACAO, --CAMPO 3
             C.DS_CNAE AS RAMO -- CAMPO 4
         FROM CLIENTE C
-        JOIN SALDO_CLIENTE S ON C.ID = CLIENTE
+        LEFT JOIN SALDO_CLIENTE S ON C.ID = CLIENTE
         WHERE C.ID = '{id}'
         GROUP BY C.ID, C.CLASSIFICACAO, C.DS_CNAE
     """
@@ -57,13 +57,12 @@ def get_empresa_by_id(id: str) -> Empresa:
         empresa = Empresa(
             nome=row.get("NAME"),
             cnpj=row.get("CNPJ"),
-            saldo_total=row.get("SALDO", 0.0),
-            medLucro=row.get("MEDIA", 0.0),
+            saldo_total=row.get("SALDO", 0.0) if row.get("SALDO") is not None else 0.0,
+            medLucro=row.get("MEDIA", 0.0) if row.get("MEDIA") is not None else 0.0,
             cnae=cnae,
-            classificacao=row.get("CLASSIFICACAO", ""),
-            saldos=empresa_infos["saldos"], 
-            relacionamentos=empresa_infos["relacionamentos"], 
-            semelhantes=empresa_infos["semelhantes"] 
+            classificacao=row.get("CLASSIFICACAO", "") if row.get("CLASSIFICACAO") is not None else "Não Classificado",
+            saldos=empresa_infos["saldos"] if "saldos" in empresa_infos else [],
+            relacionamentos=empresa_infos.get("relacionamentos", Relacionamentos(pagadores=[], recebedores=[]))
         )
         return empresa
     return None
@@ -71,8 +70,7 @@ def get_empresa_by_id(id: str) -> Empresa:
 def get_empresa_infos(id: str, cnae: str) -> object:
     empresa_infos = {
         "saldos": get_saldos(id),
-        "relacionamentos": get_relacionamentos(id),
-        "semelhantes": get_semelhantes(cnae)
+        "relacionamentos": get_relacionamentos(id)
     }
     return empresa_infos
 
@@ -186,24 +184,3 @@ def get_recebedores(id: str) -> List[Relacionamento]:
                 )
             )
     return recebedores
-
-def get_semelhantes(cnae: str) -> List[Semelhante]:
-    query = f"""
-        SELECT DISTINCT TOP 5
-            ID, 
-            DS_CNAE, 
-            CLASSIFICACAO  
-        FROM CLIENTE where DS_CNAE = '{cnae}'
-    """
-    resultados = execute_query(query)
-    semelhantes = []
-    for row in resultados:
-        semelhantes.append(
-            Semelhante(
-                cnpj=row.get("ID"),
-                nome=row.get("ID"),
-                cnae=cnae,
-                classificacao=row.get("CLASSIFICACAO", "")
-                )
-            )
-    return semelhantes

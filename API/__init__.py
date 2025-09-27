@@ -1,0 +1,1 @@
+# __init__.py para tornar o diretório API um pacote Python
