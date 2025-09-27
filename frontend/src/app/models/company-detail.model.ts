@@ -1,36 +1,28 @@
 export interface Balance {
-  date: string;
-  balance: number;
+  data: string;
+  saldo: number;
 }
 
 export interface Relationship {
   cnpj: string;
-  name: string;
-  totalIn: number;
-  totalOut: number;
-  interactions: number;
+  nome: string;
+  totalEnt: number;
+  totalSai: number;
+  interacoes: number;
 }
 
 export interface Relationships {
-  payers: Relationship[];
-  receivers: Relationship[];
-}
-
-export interface Similar {
-  cnpj: string;
-  name: string;
-  cnae: string;
-  classification: string | null;
+  pagadores: Relationship[];
+  recebedores: Relationship[];
 }
 
 export class CompanyDetail {
-  name!: string;
+  nome!: string;
   cnpj!: string;
-  totalBalance!: number;
-  avgProfit!: number | null;
-  classification!: string | null;
+  saldo_total!: number | null;
+  medLucro!: number | null;
+  classificacao!: string | null;
   cnae!: string;
-  balances!: Balance[];
-  relationships!: Relationships;
-  similar!: Similar[];
+  saldos!: Balance[];
+  relacionamentos!: Relationships;
 }

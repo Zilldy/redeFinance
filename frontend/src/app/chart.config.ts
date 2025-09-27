@@ -1,4 +1,4 @@
-import { Chart as ChartJS, ArcElement, Tooltip, Legend, Title, BarElement, LineElement, CategoryScale, LinearScale, PointElement, PieController, BarController } from 'chart.js';
+import { Chart as ChartJS, ArcElement, Tooltip, Legend, Title, BarElement, LineElement, CategoryScale, LinearScale, PointElement, PieController, BarController, LineController } from 'chart.js';
 
 // registra tudo que pode ser usado
 ChartJS.register(
@@ -12,5 +12,6 @@ ChartJS.register(
   Legend,
   Title,
   PieController,
-  BarController  
+  BarController,
+  LineController
 );

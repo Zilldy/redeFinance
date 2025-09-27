@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { ThemeToggleComponent } from '../theme-toggle/theme-toggle';
 
 @Component({
@@ -13,7 +13,13 @@ import { ThemeToggleComponent } from '../theme-toggle/theme-toggle';
 export class NavbarComponent {
   menuOpen = false;
 
+  constructor(private router: Router) {}
+  
   toggleMenu() {
     this.menuOpen = !this.menuOpen;
+  }
+
+  backToHome() {
+    this.router.navigate(['/']);
   }
 }

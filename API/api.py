@@ -10,7 +10,7 @@ app = FastAPI(title="RedeFinance API", description="API para dashboard financeir
 # Configurar CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost", "http://localhost:80"],
+    allow_origins=["http://localhost", "http://localhost:80", "http://localhost:4200"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

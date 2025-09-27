@@ -1,21 +1,37 @@
-<div class="dashboard-container">
-     <ng-container *ngIf="generalAnalysis && isAnalysisLoaded">
-        <!-- CARDS MÉTRICOS -->
-        <div class="cards-grid">
-            <app-metric-card 
-                *ngFor="let card of infoCards" 
-                [title]="card.title" 
-                [subtitle]="card.subtitle">
-            </app-metric-card>
-        </div>
-        <!-- GRÁFICOS -->
-        <div class="charts-grid">
-                <app-pie-chart [data]="generalAnalysis.classificacoes"></app-pie-chart>
-                <app-bar-chart [data]="generalAnalysis.tipoTransacao"></app-bar-chart>
-        </div>
-    </ng-container>
-    <!-- LISTAGEM DE EMPRESAS -->
-    <div class="companies-grid" *ngIf="companies && isCompaniesLoaded">
-        <app-company-list [data]="companies"></app-company-list>
+<ng-container *ngIf="isLoading; else notLoading">
+  <div class="loader-container">
+    <div class="loader"></div>
+    <p>Carregando dados...</p>
+  </div>
+</ng-container>
+
+<ng-template #notLoading>
+  <div *ngIf="hasError; else content" class="error-container">
+    <p class="text-danger">Erro ao carregar os dados.</p>
+    <button class="btn-home" (click)="reloadPage()">Tentar novamente</button>
+  </div>
+</ng-template>
+
+<ng-template #content>
+  <div class="dashboard-container">
+    <!-- CARDS -->
+    <div class="cards-grid">
+      <app-metric-card 
+        *ngFor="let card of infoCards$ | async" 
+        [title]="card.title" 
+        [subtitle]="card.subtitle">
+      </app-metric-card>
     </div>
-</div>
+
+    <!-- GRÁFICOS -->
+    <div class="charts-grid" *ngIf="generalAnalysis$ | async as generalAnalysis">
+      <app-pie-chart [data]="generalAnalysis.classificacoes"></app-pie-chart>
+      <app-bar-chart [data]="generalAnalysis.tipoTransacao"></app-bar-chart>
+    </div>
+
+    <!-- EMPRESAS -->
+     <ng-container *ngIf="companies$ | async as companies">
+       <app-company-list [data]="companies$ | async"></app-company-list>
+     </ng-container>
+  </div>
+</ng-template>
