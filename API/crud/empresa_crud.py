@@ -90,7 +90,7 @@ def get_saldos(id: str) -> List[Saldo]:
         saldos.append(
             Saldo(
                 data=row.get("MES_REFERENCIA"), 
-                saldo=row.get("SALDO_MES", 0.0).replace(',', '')
+                saldo=row.get("SALDO_MES", 0.0) if row.get("SALDO_MES") is not None else 0.0
                 )
             )
     return saldos
