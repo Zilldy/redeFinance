@@ -129,7 +129,7 @@ def get_pagadores_por_tipo(id: str, tipo_pagador: str) -> List[Relacionamento]:
     ) R
     WHERE R.{tipo_pagador} <> 0
     GROUP BY R.PARCEIRO
-    ORDER BY INTERACOES DESC, TOTAL_ENTRADA DESC
+    ORDER BY INTERACOES DESC, TOTAL_{tipo_pagador} DESC
     """
     resultados = execute_query(query)
     recebedores = []
