@@ -1,19 +1,5 @@
 #version: '3.8'
 services:
-  ollama:
-    image: ollama/ollama:latest
-    container_name: redefinance_ollama
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              count: all
-              capabilities: [gpu]
-    ports:
-      - "11434:11434"
-    restart: unless-stopped
-    entrypoint: ["sh", "-c", "ollama serve & sleep 5 && ollama pull llama3 && wait"]
   api:
     build:
       context: ./API
@@ -22,12 +8,11 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ConnectionStrings__DefaultConnection=Server=db;Database=RedefinanceDB;User Id=sa;Password=M@sterk3y;
-      - OLLAMA_HOST=http://ollama:11434
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
     ports:
       - "8000:8000"
     depends_on:
       - db
-      - ollama
   db:
     build:
       context: ./sql-server
