@@ -28,7 +28,7 @@ if __name__ == "__main__":
             classifier = classification.CNPJClassifier(df)
             df_classificado = classifier.classify()
             print("DataFrame classificado:")
-            print(df_classificado)
+            print(df_classificado[['CLIENTE', 'CLASSIFICACAO']])
 
         conn.close()
     except Exception as e:
@@ -40,3 +40,4 @@ if __name__ == "__main__":
     end_datetime = datetime.fromtimestamp(end_time).strftime("%d/%m/%Y %H:%M:%S")
     print(f"\nComeçou a execução em {start_datetime} e terminou em {end_datetime}")
     print(f"\nTempo de execução: {execution_time:.2f} segundos")
+    print("\nClassificação finalizada!")
