@@ -8,6 +8,7 @@ BEGIN
     WITH MOVE 'CHALLANGE' TO '/var/opt/mssql/data/CHALLENGE.mdf',
         MOVE 'CHALLANGE_log' TO '/var/opt/mssql/data/CHALLENGE_log.ldf',
         REPLACE;
+        PRINT 'Database CHALLENGE restaurada com sucesso.';
     END
 ELSE
 BEGIN

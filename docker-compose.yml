@@ -18,6 +18,10 @@ services:
       context: ./sql-server
       dockerfile: Dockerfile
     container_name: redefinance_sql
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=M@sterk3y
+      - MSSQL_PID=Express
     ports:
       - "14330:1433"
     volumes:
