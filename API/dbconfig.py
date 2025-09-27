@@ -5,6 +5,7 @@ import warnings
 
 
 # Configurações de conexão Para SQL Docker
+#server = 'redefinance_sql,1433'
 server = 'localhost,14330'
 database = 'CHALLENGE'
 username = 'sa'
