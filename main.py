@@ -13,7 +13,6 @@ if __name__ == "__main__":
     """)
     try:
         conn = dbconfig.get_connection()
-
         print("Conexão bem-sucedida com o banco de dados! \n")
 
         df = dbconfig.DatabaseTableData().preencher_dataframe("SALDO_CLIENTE")
@@ -21,7 +20,7 @@ if __name__ == "__main__":
             print("Nenhum cliente encontrado para ser classificado.\n")
         else:
             print("Total de clientes a serem classificados:", df.shape[0], "\n")
-            print("Lista de clientes classificados:\n", df[["CLIENTE"]].head(), "\n")
+            #print("Lista de clientes classificados:\n", df[["CLIENTE"]].head(), "\n")
 
             classifier = classification.CNPJClassifier(df)
             classifier.classify()
