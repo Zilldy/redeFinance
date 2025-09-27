@@ -1,0 +1,17 @@
+<div class="company-list">
+  <h3 class="list-title">Empresas</h3>
+
+  <div class="company-grid">
+    <div class="company-card" *ngFor="let company of paginatedCompanies">
+      <h4>{{ company.nome }}</h4>
+      <p>CNPJ: {{ company.cnpj }}</p>
+      <p>Classificação: {{ company.classificacao }}</p>
+      <p>CNAE: {{ company.cnae }}</p>
+    </div>
+  </div>
+  <mat-paginator class="paginator"
+    [length]="allCompanies.length"
+    [pageSize]="pageSize"
+    [pageSizeOptions]="[6, 10, 20, 50]">
+  </mat-paginator>
+</div>

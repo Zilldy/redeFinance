@@ -1,0 +1,71 @@
+@use '@angular/material' as mat;
+
+.company-list {
+  border: 2px solid #b30000;
+  border-radius: 8px;
+  padding: 1rem;
+  background-color: var(--surface-color);
+  color: var(--text-color);
+
+  .list-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #b30000;
+    margin-bottom: 1.5rem;
+  }
+
+  .company-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+
+    @media (max-width: 1024px) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media (max-width: 768px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .company-card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 1rem;
+    background: var(--surface-color);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease;
+
+    &:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    }
+
+    .company-name {
+      font-size: 1rem;
+      font-weight: bold;
+      margin: 0 0 0.5rem 0;
+      color: var(--text-color);
+    }
+
+    .company-cnpj,
+    .company-class,
+    .company-cnae {
+      font-size: 0.85rem;
+      color: var(--text-color);
+      margin: 0.2rem 0;
+    }
+  }
+  
+  .paginator {
+    background-color: var(--surface-color);
+    color: var(--text-color);
+  }
+  
+  ::ng-deep .mat-mdc-paginator .mat-mdc-select-trigger {
+    color: var(--text-color) !important;
+    border-radius: 4px;
+    padding: 0.2rem 0.6rem;
+  }
+  
+}
