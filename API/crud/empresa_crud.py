@@ -99,11 +99,11 @@ def get_saldos(id: str) -> List[Saldo]:
 
 def get_relacionamentos(id: str) -> Relacionamentos:
     # Implementação para buscar relacionamentos no banco de dados
-    pagadores = get_pagadores(id)
-    recebedores = get_recebedores(id)
+    pagadores = get_pagadores_por_tipo(id, "SAIDA")
+    recebedores = get_pagadores_por_tipo(id, "ENTRADA")
     return Relacionamentos(pagadores=pagadores, recebedores=recebedores)
 
-def get_pagadores(id: str) -> List[Relacionamento]:
+def get_pagadores_por_tipo(id: str, tipo_pagador: str) -> List[Relacionamento]:
     query = f"""
     SELECT TOP 5
         R.PARCEIRO,
@@ -127,47 +127,7 @@ def get_pagadores(id: str) -> List[Relacionamento]:
     FROM FATURAMENTO F
     WHERE F.ID_RCBE = '{id}'
     ) R
-    GROUP BY R.PARCEIRO
-    ORDER BY INTERACOES DESC, TOTAL_SAIDA DESC
-    """
-    resultados = execute_query(query)
-    pagadores = []
-    for row in resultados:
-        pagadores.append(
-            Relacionamento(
-                    cnpj=row.get("PARCEIRO"),
-                    nome=row.get("PARCEIRO"),
-                    totalEnt=row.get("TOTAL_ENTRADA", 0.0),
-                    totalSai=row.get("TOTAL_SAIDA", 0.0),
-                    interacoes=row.get("INTERACOES", 0)
-                )
-            )
-    return pagadores
-
-def get_recebedores(id: str) -> List[Relacionamento]:
-    query = f"""
-    SELECT TOP 5
-        R.PARCEIRO,
-        SUM(R.ENTRADA) AS TOTAL_ENTRADA,
-        SUM(R.SAIDA) AS TOTAL_SAIDA,
-        COUNT(*) AS INTERACOES
-    FROM (
-    SELECT 
-        F.ID_RCBE AS PARCEIRO,
-        0 AS ENTRADA,
-        TRY_CAST(REPLACE(CAST(F.VL AS VARCHAR), ',', '') AS DECIMAL(18,2)) AS SAIDA
-    FROM FATURAMENTO F
-    WHERE F.ID_PGTO = '{id}'
-
-    UNION ALL
-
-    SELECT 
-        F.ID_PGTO AS PARCEIRO,
-        TRY_CAST(REPLACE(CAST(F.VL AS VARCHAR), ',', '') AS DECIMAL(18,2)) AS ENTRADA,
-        0 AS SAIDA
-    FROM FATURAMENTO F
-    WHERE F.ID_RCBE = '{id}'
-    ) R
+    WHERE R.{tipo_pagador} <> 0
     GROUP BY R.PARCEIRO
     ORDER BY INTERACOES DESC, TOTAL_ENTRADA DESC
     """
