@@ -5,7 +5,7 @@ SELECT
   SUM(FC.SALDO_MES) AS SALDO_TOTAL_CLIENTE
 FROM CLIENTE C
 LEFT JOIN FATURAMENTO_CLIENTE FC ON FC.CLIENTE = C.ID
-WHERE C.CLASSIFICACAO IS NULL  /* Se quiser filtrar só os não classificados */
+--WHERE C.CLASSIFICACAO IS NULL  /* Se quiser filtrar só os não classificados */
 GROUP BY C.ID, C.DT_ABRT;
 
 

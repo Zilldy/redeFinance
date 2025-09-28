@@ -18,7 +18,7 @@ if __name__ == "__main__":
         conn = dbconfig.get_connection()
         print("Conexão bem-sucedida com o banco de dados! \n")
 
-        df = dbconfig.DatabaseTableData().preencher_dataframe("SALDO_CLIENTE")
+        df = dbconfig.DatabaseTableData().preencher_dataframe("CARGA_CLASSIFICATION")
         if df is None or df.empty:
             print("Nenhum cliente encontrado para ser classificado.\n")
         else:

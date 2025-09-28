@@ -81,7 +81,7 @@ export class CnpjDetailComponent implements OnInit {
 
     return [
       { title: companyDetail.nome, subtitle: companyDetail.cnpj },
-      { title: "Patrimônio da Empresa", subtitle: formatBRL(companyDetail.saldo_total) },
+      { title: "Saldo da Empresa", subtitle: formatBRL(companyDetail.saldo_total) },
       { title: "Média de Lucro Mensal", subtitle: formatBRL(companyDetail.medLucro) },
       { title: "Classificação de Perfil", subtitle: companyDetail.classificacao },
       { title: "Ramo de Atuação", subtitle: companyDetail.cnae },
