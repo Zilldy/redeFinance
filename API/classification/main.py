@@ -19,7 +19,7 @@ if __name__ == "__main__":
 ╚═╝  ╚═╝╚══════╝╚═════╝ ╚══════╝╚═╝     ╚═╝╚═╝  ╚═══╝╚═╝  ╚═╝╚═╝  ╚═══╝ ╚═════╝ ╚═════╝
     """)
     try:
-        hour = time.localtime().tm_hour - 3
+        hour = time.localtime().tm_hour #- 3
         print(hour)
         if hour >= 0 and hour <= 2:
             conn = dbconfig.get_connection()
