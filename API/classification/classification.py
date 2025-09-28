@@ -68,15 +68,8 @@ class CNPJClassifier:
         Consulta o saldo do último mês para o cliente no banco de dados.
         """
         query = f"""
-        SELECT TOP 1
-        CASE 
-            WHEN LEFT(LTRIM(RTRIM(SALDO_MES)), 1) = '-' THEN  
-                TRY_CAST(REPLACE(SUBSTRING(LTRIM(RTRIM(SALDO_MES)), 2, LEN(LTRIM(RTRIM(SALDO_MES)))), ',', '') AS FLOAT) * -1
-            WHEN LEFT(LTRIM(RTRIM(SALDO_MES)), 1) = '+' THEN  
-                TRY_CAST(REPLACE(SUBSTRING(LTRIM(RTRIM(SALDO_MES)), 2, LEN(LTRIM(RTRIM(SALDO_MES)))), ',', '') AS FLOAT)
-            ELSE  
-                TRY_CAST(REPLACE(LTRIM(RTRIM(SALDO_MES)), ',', '') AS FLOAT)
-        END AS SALDO_MES_CONVERTIDO
+		SELECT TOP 1
+           SALDO_MES  AS SALDO_MES_CONVERTIDO
         FROM FATURAMENTO_CLIENTE
         WHERE CLIENTE = '{cliente}'
         ORDER BY MES_REFERENCIA DESC;
