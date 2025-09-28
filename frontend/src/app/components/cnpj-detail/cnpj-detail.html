@@ -38,7 +38,7 @@
                 (change)="onToggleChange($event)"
                 [disabled]="!companyDetail.relacionamentos.pagadores?.length || !companyDetail.relacionamentos.recebedores?.length">
                 <span [ngClass]="selectedView === 'pagadores' ? 'text-pagadores' : 'text-recebedores'">
-                  {{ selectedView === 'pagadores' ? 'Pagadores' : 'Recebedores' }}
+                  {{ selectedView === 'pagadores' ? 'Saída' : 'Entrada' }}
                 </span>
               </mat-slide-toggle>
 
