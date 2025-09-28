@@ -31,15 +31,10 @@ def get_empresa_by_id(id: str) -> Empresa:
         SELECT DISTINCT
             C.ID as [NAME],
             C.ID as CNPJ,
-            SUM(S.SALDO_TOTAL_CLIENTE) AS SALDO,
-                CAST(
+            S.SALDO_TOTAL_CLIENTE AS SALDO,
+            CAST(
                 (
-                SELECT 
-                    SUM(
-                    TRY_CAST(REPLACE(REPLACE(LTRIM(RTRIM(FC.SALDO_MES)), '+', ''), ',', '') AS DECIMAL(18,2))
-                    ) / COUNT(*)
-                FROM FATURAMENTO_CLIENTE FC
-                WHERE FC.CLIENTE = C.ID
+                SELECT (SUM( FC.SALDO_MES) / COUNT(*)) FROM FATURAMENTO_CLIENTE FC WHERE FC.CLIENTE = C.ID
                 ) AS DECIMAL(18,2)
             ) AS MEDIA, -- CAMPO 2
             C.CLASSIFICACAO, --CAMPO 3
@@ -47,7 +42,7 @@ def get_empresa_by_id(id: str) -> Empresa:
         FROM CLIENTE C
         LEFT JOIN SALDO_CLIENTE S ON C.ID = CLIENTE
         WHERE C.ID = '{id}'
-        GROUP BY C.ID, C.CLASSIFICACAO, C.DS_CNAE
+        GROUP BY C.ID, C.CLASSIFICACAO, C.DS_CNAE, S.SALDO_TOTAL_CLIENTE
     """
     resultados = execute_query(query)
     if resultados:
