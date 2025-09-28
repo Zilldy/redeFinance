@@ -30,5 +30,8 @@ COPY . .
 # Exponha a porta padrão do FastAPI
 EXPOSE 8000
 
-# Comando para iniciar a aplicação
-CMD ["uvicorn", "api:app", "--host", "0.0.0.0", "--port", "8000"]
+# Cria um entrypoint simples
+RUN echo '#!/bin/sh\npython -m classification.main\nexec uvicorn api:app --host 0.0.0.0 --port 8000' > /entrypoint.sh && chmod +x /entrypoint.sh
+
+# Comando para iniciar o entrypoint
+CMD ["/entrypoint.sh"]

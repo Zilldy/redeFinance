@@ -1,5 +1,11 @@
 import pandas as pd
-from API.dbconfig import get_connection
+import sys
+import os
+
+# Adiciona o diretório pai ao PYTHONPATH para importações
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+from dbconfig import get_connection
 
 
 class CNPJClassifier:
