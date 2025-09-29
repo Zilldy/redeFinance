@@ -1,0 +1,10 @@
+<div class="chart-card">
+    <h3 class="chart-title">Tipo Pagamento X Valor Total</h3>
+    <div class="chart-container" *ngIf="isBrowser">
+        <canvas baseChart
+                [data]="barChartData"
+                [options]="barChartOptions"
+                [type]="'bar'">
+        </canvas>
+    </div>
+</div>

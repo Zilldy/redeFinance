@@ -1,0 +1,43 @@
+<div class="company-list">
+  <div class="list-header">
+    <h3 class="list-title">Empresas</h3>
+    <div class="filters">
+      <input (keyup)="filterByName($event.target.value)" type="text" placeholder="Buscar empresa...">
+      <select (change)="onSelectChange($event)">
+        <option value="">Todos</option>
+        <option value="Início">Início</option>
+        <option value="Expansão">Expansão</option>
+        <option value="Madura">Madura</option>
+        <option value="Declínio">Declínio</option>
+        <option value="Não Classificado">Não Classificado</option>
+      </select>
+    </div>
+  </div>
+  <div class="company-grid">
+    <div class="company-card" 
+      *ngFor="let company of paginatedCompanies"
+      (click)="goToDetail(company)"
+      [class.disabled]="company.classificacao === 'Não Classificado'">
+
+      <div class="card-header">
+        <h4 class="mb-4">{{ company?.nome || '*****' }}</h4>
+        <mat-icon 
+          *ngIf="company?.classificacao === 'Não Classificado'"
+          matTooltip="Esse CNPJ não possui informações suficientes para ser classificado."
+          class="warning-icon">
+          warning
+        </mat-icon>
+      </div>
+
+      <p>CNPJ: {{ company?.cnpj || '*****' }}</p>
+      <p>Classificação: {{ company?.classificacao || '*****' }}</p>
+      <p>CNAE: {{ company?.cnae || '*****' }}</p>
+    </div>
+  </div>
+
+  <mat-paginator class="paginator"
+    [length]="allCompanies?.length"
+    [pageSize]="pageSize"
+    [pageSizeOptions]="[6, 10, 20, 50]">
+  </mat-paginator>
+</div>

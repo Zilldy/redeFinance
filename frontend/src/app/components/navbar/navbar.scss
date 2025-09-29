@@ -1,0 +1,36 @@
+.navbar {
+  display: flex;
+  justify-content: space-between; // joga um pra esquerda e outro pra direita
+  align-items: center;
+  background: #b30000;
+  padding: 0.8rem 1rem;
+  color: #fff;
+
+  .navbar-left img {
+    height: 32px;           // ajusta o tamanho da logo
+    object-fit: contain;
+  }
+
+  .cursor-pointer {
+    cursor: pointer;
+  }
+
+
+  .navbar-right {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+    span {
+      font-size: 1.3rem;
+      font-weight: bold;
+      color: #fff;
+    }
+
+    app-theme-toggle {
+      ::ng-deep .theme-toggle-btn i {
+        color: #fff;
+      }
+    }
+  }
+}

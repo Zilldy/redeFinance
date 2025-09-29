@@ -1,0 +1,44 @@
+#version: '3.8'
+services:
+  api:
+    build:
+      context: ./API
+      dockerfile: Dockerfile
+    container_name: redefinance_api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Server=db;Database=RedefinanceDB;User Id=sa;Password=M@sterk3y;
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+  db:
+    build:
+      context: ./sql-server
+      dockerfile: Dockerfile
+    container_name: redefinance_sql
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=M@sterk3y
+      - MSSQL_PID=Express
+    ports:
+      - "14330:1433"
+    volumes:
+      - ./mssql_data:/var/opt/mssql/data
+      - ./database/procedures:/var/opt/mssql/data/procedures
+      - ./database/csv:/var/opt/mssql/data/csv
+      - ./sql-server/entrypoint.sh:/entrypoint.sh
+      - ./sql-server/restore-db.sql:/restore-db.sql
+      - ./sql-server/backuup/SeuBanco.bak:/backuup/SeuBanco.bak
+    entrypoint: ["/bin/bash", "/entrypoint.sh"]
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: redefinance_frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - api

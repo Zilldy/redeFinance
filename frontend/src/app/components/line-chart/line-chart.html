@@ -1,0 +1,11 @@
+<div class="chart-card">
+    <h3 class="chart-title">Acompanhamento Econômico da Empresa</h3>
+    <div class="chart-container" *ngIf="isBrowser">
+        <canvas
+            baseChart
+            [data]="lineChartData"
+            [options]="lineChartOptions"
+            [type]="'line'">
+        </canvas>
+    </div>
+</div>
