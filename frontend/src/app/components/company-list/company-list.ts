@@ -17,25 +17,35 @@ export class CompanyListComponent {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @Input() data: Company[] | null = [];
   allCompanies: Company[] | null = [];
+  filteredCompanies: Company[] | null = [];
   paginatedCompanies: Company[] | undefined = [];
   pageSize = 6;
+  viewMode: 'grid' | 'list' = 'grid';
+
   constructor(private router: Router){}
 
   ngOnChanges() {
     this.allCompanies = this.data ?? [];
-    this.updatePage(this.allCompanies);
-    this.paginator?.page.subscribe(() => this.updatePage(this.allCompanies));
+    this.filteredCompanies = this.allCompanies;
+    this.resetPagination();
   }
 
   ngAfterViewInit() {
-    this.updatePage(this.allCompanies);
-    this.paginator?.page.subscribe(() => this.updatePage(this.allCompanies));
+    this.updatePage();
+    this.paginator?.page.subscribe(() => this.updatePage());
   }
 
-  updatePage(allCompanies: Company[] | null) {  
-    const startIndex = this.paginator?.pageIndex * this.paginator?.pageSize;
-    const endIndex = startIndex + this.paginator?.pageSize;
-    this.paginatedCompanies = allCompanies?.slice(startIndex, endIndex);
+  resetPagination() {
+    if (this.paginator) {
+      this.paginator.pageIndex = 0;
+    }
+    this.updatePage();
+  }
+
+  updatePage() {  
+    const startIndex = (this.paginator?.pageIndex || 0) * (this.paginator?.pageSize || this.pageSize);
+    const endIndex = startIndex + (this.paginator?.pageSize || this.pageSize);
+    this.paginatedCompanies = this.filteredCompanies?.slice(startIndex, endIndex);
   }
 
   goToDetail(company: any) {
@@ -47,17 +57,14 @@ export class CompanyListComponent {
 
   filterByName(name: string) {
     if(name === ''){
-      this.updatePage(this.allCompanies);
-      return;
+      this.filteredCompanies = this.allCompanies;
     }else{
-      var companies = this.allCompanies;
-      const found = companies?.filter(company => company.nome.toLowerCase().includes(name.toLowerCase()));
-      if (found) {
-        this.updatePage(found);
-      }else{
-        console.log("DEU BOM NÃO");
-      }
+      const found = this.allCompanies?.filter(company => 
+        company.nome.toLowerCase().includes(name.toLowerCase())
+      );
+      this.filteredCompanies = found || [];
     }
+    this.resetPagination();
   }
 
   onSelectChange(event: Event) {
@@ -67,12 +74,17 @@ export class CompanyListComponent {
 
   filterByClassification(classification: string) {
     if(classification === ''){
-      this.updatePage(this.allCompanies);
-      return;
+      this.filteredCompanies = this.allCompanies;
     }else{
-      var companies = this.allCompanies;
-      const found = companies?.filter(company => company.classificacao === classification);
-      this.updatePage(found || []);
+      const found = this.allCompanies?.filter(company => 
+        company.classificacao === classification
+      );
+      this.filteredCompanies = found || [];
     }
+    this.resetPagination();
+  }
+
+  setViewMode(mode: 'grid' | 'list') {
+    this.viewMode = mode;
   }
 }

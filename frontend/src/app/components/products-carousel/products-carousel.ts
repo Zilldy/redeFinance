@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
 interface ReplyProduct {
   product: string;
   why: string;
+  approved?: boolean;
 }
 
 @Component({
@@ -17,6 +18,8 @@ interface ReplyProduct {
 export class ProductsCarouselComponent implements OnInit {
   @Input() companyDetail: any;
   replyProducts: ReplyProduct[] = [];
+  currentIndex = 0;
+  showModal = false;
 
   constructor(private http: HttpClient) {}
 
@@ -48,7 +51,31 @@ export class ProductsCarouselComponent implements OnInit {
     // }
   }
 
-  currentIndex = 0;
+  openProductInfo(): void {
+    this.showModal = true;
+  }
+
+  closeProductInfo(): void {
+    this.showModal = false;
+  }
+
+  approveProduct(): void {
+    if (this.replyProducts[this.currentIndex]) {
+      this.replyProducts[this.currentIndex].approved = true;
+    }
+  }
+
+  rejectProduct(): void {
+    // Remove o produto do array diretamente
+    this.replyProducts.splice(this.currentIndex, 1);
+    
+    // Ajusta o índice se necessário
+    if (this.currentIndex >= this.replyProducts.length && this.replyProducts.length > 0) {
+      this.currentIndex = this.replyProducts.length - 1;
+    } else if (this.replyProducts.length === 0) {
+      this.currentIndex = 0;
+    }
+  }
 
   next(): void {
     if (this.replyProducts.length > 0) {

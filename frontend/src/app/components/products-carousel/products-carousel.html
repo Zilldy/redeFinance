@@ -1,17 +1,69 @@
 <div class="carousel-container" *ngIf="replyProducts.length > 0; else noData">
-  <!-- título fixo -->
-  <h5 class="title mb-3">Recomendações de Produtos IA</h5>
-
-  <!-- apenas a descrição troca -->
-  <div class="carousel-item">
-    <h5 class="title text-center">{{ replyProducts[currentIndex].product }}</h5>
-    <p class="desc">{{ replyProducts[currentIndex].why }}</p>
+  <!-- Header com título à esquerda e botão info à direita -->
+  <div class="carousel-header">
+    <h5 class="carousel-title">Recomendações de Produtos IA</h5>
+    
+    <button class="info-button" (click)="openProductInfo()" title="Ver detalhes do produto">
+      <i class="material-icons">info</i>
+    </button>
   </div>
 
-  <div class="carousel-controls">
-    <button (click)="prev()">&#9664; Anterior</button>
-    <span>{{ currentIndex + 1 }} / {{ replyProducts.length }}</span>
-    <button (click)="next()">Próximo &#9654;</button>
+  <div class="carousel-content">
+    <!-- Seta esquerda -->
+    <button class="carousel-arrow carousel-arrow-left" (click)="prev()" [disabled]="replyProducts.length <= 1">
+      <i class="material-icons">chevron_left</i>
+    </button>
+
+    <div class="product-content">
+      <h4 class="product-title">{{ replyProducts[currentIndex].product }}</h4>
+      
+      <!-- Botões de Ação -->
+      <div class="action-buttons" *ngIf="!replyProducts[currentIndex].approved">
+        <button 
+          class="action-btn approve-btn" 
+          (click)="approveProduct()" 
+          title="Aprovar produto">
+          <i class="material-icons">check</i>
+        </button>
+        <button 
+          class="action-btn reject-btn" 
+          (click)="rejectProduct()" 
+          title="Rejeitar produto">
+          <i class="material-icons">close</i>
+        </button>
+      </div>
+
+      <!-- Status de Aprovado -->
+      <div class="approved-status" *ngIf="replyProducts[currentIndex].approved">
+        <i class="material-icons approved-icon">check_circle</i>
+        <span class="approved-text">Produto Aprovado</span>
+      </div>
+    </div>
+
+    <!-- Seta direita -->
+    <button class="carousel-arrow carousel-arrow-right" (click)="next()" [disabled]="replyProducts.length <= 1">
+      <i class="material-icons">chevron_right</i>
+    </button>
+  </div>
+
+  <!-- Indicador de posição centralizado na parte inferior -->
+  <div class="position-indicator">
+    {{ currentIndex + 1 }} / {{ replyProducts.length }}
+  </div>
+</div>
+
+<!-- Modal Pop-up de Informações -->
+<div class="modal-overlay" *ngIf="showModal" (click)="closeProductInfo()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3 class="modal-title">{{ replyProducts[currentIndex].product }}</h3>
+      <button class="modal-close" (click)="closeProductInfo()">
+        <i class="material-icons">close</i>
+      </button>
+    </div>
+    <div class="modal-body">
+      <p>{{ replyProducts[currentIndex].why }}</p>
+    </div>
   </div>
 </div>
 

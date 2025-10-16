@@ -14,78 +14,134 @@
     margin-bottom: 1.5rem;
   }
 
-  .company-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1rem;
+  .company-container {
+    transition: all 0.3s ease;
 
-    @media (max-width: 1024px) {
-      grid-template-columns: repeat(2, 1fr);
+    // Visualização em Grid (padrão)
+    &.grid-view {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+
+      @media (max-width: 1024px) {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      @media (max-width: 768px) {
+        grid-template-columns: 1fr;
+      }
+
+      .company-item {
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 1rem;
+        background: var(--surface-color);
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s ease;
+        position: relative;
+
+        &:hover {
+          transform: translateY(-5px);
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+        }
+
+        .item-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 0.5rem;
+
+          .company-name {
+            font-size: 1rem;
+            font-weight: bold;
+            margin: 0;
+            color: var(--text-color);
+          }
+        }
+
+        .company-details {
+          p {
+            font-size: 0.85rem;
+            color: var(--text-color);
+            margin: 0.2rem 0;
+          }
+        }
+      }
     }
 
-    @media (max-width: 768px) {
-      grid-template-columns: 1fr;
+    // Visualização em Lista
+    &.list-view {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      align-items: center;
+
+      .company-item {
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 0.75rem 1rem;
+        background: var(--surface-color);
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 70%;
+        max-width: 1400px;
+
+        &:hover {
+          transform: translateX(5px);
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+          border-left: 4px solid var(--primary-color, #d32f2f);
+        }
+
+        .item-header {
+          display: flex;
+          align-items: center;
+          gap: 1rem;
+          flex: 1;
+
+          .company-name {
+            font-size: 0.95rem;
+            font-weight: bold;
+            margin: 0;
+            color: var(--text-color);
+            min-width: 150px;
+          }
+        }
+
+        .company-details {
+          display: flex;
+          gap: 1.5rem;
+          align-items: center;
+          flex: 2;
+
+          p {
+            font-size: 0.8rem;
+            color: var(--text-color);
+            margin: 0;
+            min-width: 120px;
+          }
+        }
+
+        .warning-icon {
+          margin-left: auto;
+          font-size: 18px;
+        }
+      }
     }
-  }
 
-  .company-card {
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 1rem;
-    background: var(--surface-color);
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s ease;
-    position: relative; // permite posicionar o ícone
-
-    &:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-    }
-
-    &.disabled {
+    .company-item.disabled {
       opacity: 0.6;
       cursor: not-allowed;
 
-      // Bloqueia apenas clique nos textos e no header
-      .card-header h4,
-      .company-cnpj,
-      .company-class,
-      .company-cnae {
+      .item-header .company-name,
+      .company-details p {
         pointer-events: none;
       }
 
-      // Mantém o ícone interativo (tooltip funciona)
       .warning-icon {
         pointer-events: auto;
-      }
-    }
-
-
-    .company-name {
-      font-size: 1rem;
-      font-weight: bold;
-      margin: 0 0 0.5rem 0;
-      color: var(--text-color);
-    }
-
-    .company-cnpj,
-    .company-class,
-    .company-cnae {
-      font-size: 0.85rem;
-      color: var(--text-color);
-      margin: 0.2rem 0;
-    }
-
-    .card-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-
-      h4 {
-        margin: 0;
-      }
-
-      .warning-icon {
         color: #d32f2f;
         font-size: 20px;
         cursor: default;
@@ -93,6 +149,76 @@
     }
   }
   
+  // Responsividade para visualização em lista
+  @media (max-width: 1024px) {
+    .company-container.list-view {
+      .company-item {
+        width: 80%;
+      }
+    }
+  }
+
+  @media (max-width: 768px) {
+    .company-container.list-view {
+      .company-item {
+        width: 95%;
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 0.75rem;
+
+        .item-header {
+          width: 100%;
+          margin-bottom: 0.5rem;
+
+          .company-name {
+            min-width: auto;
+            font-size: 0.9rem;
+          }
+        }
+
+        .company-details {
+          flex-direction: column;
+          gap: 0.25rem;
+          align-items: flex-start;
+
+          p {
+            min-width: auto;
+            font-size: 0.75rem;
+          }
+        }
+
+        .warning-icon {
+          margin-left: 0;
+          margin-top: 0.5rem;
+          font-size: 16px;
+        }
+
+        &:hover {
+          transform: translateY(-2px);
+          border-left: none;
+        }
+      }
+    }
+
+    .list-header {
+      flex-direction: column;
+      gap: 1rem;
+      align-items: stretch;
+
+      .header-controls {
+        justify-content: space-between;
+      }
+
+      .filters {
+        flex: 1;
+
+        input, select {
+          margin-right: 0.5rem;
+        }
+      }
+    }
+  }
+
   .paginator {
     background-color: var(--surface-color);
     color: var(--text-color);
@@ -114,6 +240,12 @@
       margin: 0;
     }
 
+    .header-controls {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
     .filters {
       display: flex;
       align-items: center;
@@ -127,6 +259,40 @@
         margin-right: 1rem;
         background-color: var(--background-color);
         color: var(--text-color);
+      }
+    }
+
+    .view-toggle {
+      display: flex;
+      border: 2px solid var(--primary-color, #d32f2f);
+      border-radius: 8px;
+      overflow: hidden;
+
+      .toggle-btn {
+        background: var(--surface-color);
+        color: var(--primary-color, #d32f2f);
+        border: none;
+        padding: 0.5rem 0.75rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        &:hover {
+          background: var(--primary-color-alpha, rgba(211, 47, 47, 0.1));
+        }
+
+        &.active {
+          background: var(--primary-color, #d32f2f);
+          color: white;
+        }
+
+        mat-icon {
+          font-size: 20px;
+          width: 20px;
+          height: 20px;
+        }
       }
     }
   }

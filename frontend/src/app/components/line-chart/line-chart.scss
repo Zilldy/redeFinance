@@ -1,22 +1,68 @@
 .chart-card {
   height: 350px;
   flex: 1;
-  border: 2px solid #b30000;
+  border: 2px solid var(--primary-color, #b30000);
   border-radius: 8px;
   padding: 1rem;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 6px var(--shadow-color, rgba(0, 0, 0, 0.1));
+  background: linear-gradient(135deg, var(--surface-color, #f8f9fa) 0%, var(--surface-color, #f8f9fa) 100%);
   display: flex;
   flex-direction: column;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
 
-  .chart-title {
-    font-size: 1.1rem;
-    font-weight: bold;
-    color: #b30000;
+  .chart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     margin-bottom: 1.5rem;
+    flex-wrap: nowrap;
+    
+    .chart-title {
+      font-size: 1.1rem;
+      font-weight: bold;
+      color: var(--primary-color, #b30000);
+      margin: 0;
+      flex-shrink: 0;
+    }
+    
+    .date-filter {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-shrink: 0;
+      
+      .date-input {
+        padding: 0.5rem 0.75rem;
+        border: 1px solid var(--border-color, #ddd);
+        border-radius: 4px;
+        font-size: 0.9rem;
+        color: var(--text-color, #555);
+        background: var(--input-background, #fff);
+        transition: all 0.2s ease;
+        min-width: 140px;
+        
+        &:focus {
+          outline: none;
+          border-color: var(--primary-color, #b30000);
+          box-shadow: 0 0 0 2px var(--primary-color-alpha, rgba(179, 0, 0, 0.1));
+        }
+        
+        &:hover {
+          border-color: var(--border-hover-color, #bbb);
+        }
+      }
+      
+      .date-separator {
+        color: var(--text-secondary, #666);
+        font-size: 0.9rem;
+        font-weight: 500;
+        white-space: nowrap;
+      }
+    }
   }
 
   .chart-container {
-
     flex: 1;
     display: flex;
     align-items: center;
@@ -25,6 +71,102 @@
     canvas {
       max-width: 100%;
       max-height: 100%;
+    }
+  }
+}
+
+// Responsividade
+@media (max-width: 1024px) {
+  .chart-card {
+    .chart-header {
+      .chart-title {
+        font-size: 1rem;
+      }
+      
+      .date-filter {
+        gap: 0.5rem;
+        
+        .date-input {
+          font-size: 0.85rem;
+          padding: 0.4rem 0.6rem;
+          min-width: 120px;
+        }
+        
+        .date-separator {
+          font-size: 0.85rem;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .chart-card {
+    .chart-header {
+      flex-direction: column;
+      gap: 1rem;
+      align-items: stretch;
+      
+      .chart-title {
+        text-align: center;
+        font-size: 1rem;
+      }
+      
+      .date-filter {
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        
+        .date-input {
+          font-size: 0.85rem;
+          padding: 0.4rem 0.6rem;
+          min-width: 110px;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .chart-card {
+    padding: 0.75rem;
+    
+    .chart-header {
+      margin-bottom: 1rem;
+      
+      .chart-title {
+        font-size: 0.95rem;
+      }
+      
+      .date-filter {
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+        
+        .date-separator {
+          order: 2;
+          font-size: 0.8rem;
+        }
+        
+        .date-input:first-of-type {
+          order: 1;
+        }
+        
+        .date-input:last-of-type {
+          order: 3;
+        }
+        
+        .date-input {
+          width: 100%;
+          max-width: 200px;
+          font-size: 0.8rem;
+          min-width: auto;
+        }
+      }
+    }
+    
+    .chart-container {
+      height: 250px;
     }
   }
 }

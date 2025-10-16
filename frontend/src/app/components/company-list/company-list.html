@@ -1,26 +1,44 @@
 <div class="company-list">
   <div class="list-header">
     <h3 class="list-title">Empresas</h3>
-    <div class="filters">
-      <input (keyup)="filterByName($event.target.value)" type="text" placeholder="Buscar empresa...">
-      <select (change)="onSelectChange($event)">
-        <option value="">Todos</option>
-        <option value="Início">Início</option>
-        <option value="Expansão">Expansão</option>
-        <option value="Madura">Madura</option>
-        <option value="Declínio">Declínio</option>
-        <option value="Não Classificado">Não Classificado</option>
-      </select>
+    <div class="header-controls">
+      <div class="filters">
+        <input (keyup)="filterByName($event.target.value)" type="text" placeholder="Buscar empresa...">
+        <select (change)="onSelectChange($event)">
+          <option value="">Todos</option>
+          <option value="Início">Início</option>
+          <option value="Expansão">Expansão</option>
+          <option value="Madura">Madura</option>
+          <option value="Declínio">Declínio</option>
+          <option value="Não Classificado">Não Classificado</option>
+        </select>
+      </div>
+      <div class="view-toggle">
+        <button 
+          class="toggle-btn" 
+          [class.active]="viewMode === 'grid'"
+          (click)="setViewMode('grid')"
+          title="Visualização em cards">
+          <mat-icon>grid_view</mat-icon>
+        </button>
+        <button 
+          class="toggle-btn" 
+          [class.active]="viewMode === 'list'"
+          (click)="setViewMode('list')"
+          title="Visualização em lista">
+          <mat-icon>view_list</mat-icon>
+        </button>
+      </div>
     </div>
   </div>
-  <div class="company-grid">
-    <div class="company-card" 
+  <div class="company-container" [class.list-view]="viewMode === 'list'" [class.grid-view]="viewMode === 'grid'">
+    <div class="company-item" 
       *ngFor="let company of paginatedCompanies"
       (click)="goToDetail(company)"
       [class.disabled]="company.classificacao === 'Não Classificado'">
 
-      <div class="card-header">
-        <h4 class="mb-4">{{ company?.nome || '*****' }}</h4>
+      <div class="item-header">
+        <h4 class="company-name">{{ company?.nome || '*****' }}</h4>
         <mat-icon 
           *ngIf="company?.classificacao === 'Não Classificado'"
           matTooltip="Esse CNPJ não possui informações suficientes para ser classificado."
@@ -29,14 +47,16 @@
         </mat-icon>
       </div>
 
-      <p>CNPJ: {{ company?.cnpj || '*****' }}</p>
-      <p>Classificação: {{ company?.classificacao || '*****' }}</p>
-      <p>CNAE: {{ company?.cnae || '*****' }}</p>
+      <div class="company-details">
+        <p class="company-cnpj">CNPJ: {{ company?.cnpj || '*****' }}</p>
+        <p class="company-class">Classificação: {{ company?.classificacao || '*****' }}</p>
+        <p class="company-cnae">CNAE: {{ company?.cnae || '*****' }}</p>
+      </div>
     </div>
   </div>
 
   <mat-paginator class="paginator"
-    [length]="allCompanies?.length"
+    [length]="filteredCompanies?.length"
     [pageSize]="pageSize"
     [pageSizeOptions]="[6, 10, 20, 50]">
   </mat-paginator>

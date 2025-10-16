@@ -29,7 +29,7 @@
       <!-- grid bootstrap -->
       <div class="row mt-4" style="height: 100%;">
         <!-- tabela -->
-        <div class="col-md-8 relationship-table">
+        <div class="col-md-9 relationship-table">
           <div class="card relacionamentos">
             <div class="card-header">
               <h3>Principais Relacionamentos</h3>
@@ -55,8 +55,11 @@
               <tbody>
                 <tr *ngFor="let r of (selectedView === 'pagadores' 
                                       ? companyDetail.relacionamentos.pagadores 
-                                      : companyDetail.relacionamentos.recebedores)">
-                  <td class="linha">{{ r.cnpj }}</td>
+                                      : companyDetail.relacionamentos.recebedores)"
+                    class="clickable-row"
+                    (click)="navigateToCompany(r.cnpj)"
+                    title="Clique para ver detalhes de {{ r.nome }}">
+                  <td class="linha cnpj-cell">{{ r.cnpj }}</td>
                   <td class="linha">{{ r.nome }}</td>
                   <td class="entrada">+{{ r.totalEnt | currency:'BRL':'symbol':'1.2-2' }}</td>
                   <td class="saida">-{{ r.totalSai | currency:'BRL':'symbol':'1.2-2' }}</td>
@@ -67,7 +70,7 @@
         </div>
 
         <!-- carrossel -->
-        <div class="col-md-4">
+        <div class="col-md-3">
           <app-products-carousel
             [companyDetail]="companyDetail">
           </app-products-carousel>

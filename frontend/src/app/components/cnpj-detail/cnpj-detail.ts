@@ -66,6 +66,12 @@ export class CnpjDetailComponent implements OnInit {
     this.router.navigate(['/']);
   }
 
+  navigateToCompany(cnpj: string) {
+    this.router.navigate(['/empresa', cnpj]).then(() => {
+      window.location.reload();
+    });
+  }
+
   onToggleChange(event: any) {
     this.selectedView = event.checked ? 'recebedores' : 'pagadores';
   }

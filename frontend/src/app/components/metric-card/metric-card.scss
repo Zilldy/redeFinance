@@ -26,21 +26,23 @@
 // }
 
 .metric-card {
-  border: 2px solid #b30000;
+  border: 2px solid var(--primary-color, #b30000);
   border-radius: 8px;
   padding: 0.8rem;
   text-align: left;
-  background: var(--surface-color);
-  transition: transform 0.1s ease-in-out;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  background: linear-gradient(135deg, var(--surface-color, #f8f9fa) 0%, var(--surface-color, #f8f9fa) 100%);
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 6px var(--shadow-color, rgba(0, 0, 0, 0.1));
+  backdrop-filter: blur(10px);
 
   &:hover {
     transform: translateY(-3px);
+    box-shadow: 0 4px 12px var(--shadow-color, rgba(0, 0, 0, 0.15));
   }
 
   .subtitle {
     font-size: 0.9rem;
-    color: #666;
+    color: var(--text-secondary, #b81c1c);
     margin: 0 0 0.3rem 0;
     font-weight: 200;
   }
@@ -48,7 +50,7 @@
   .title {
     font-size: 1.4rem;
     font-weight: bold;
-    color: var(--text-color);
+    color: var(--text-color, #333);
     margin: 0;
     margin-bottom: 0.6rem;
   }
